@@ -11,11 +11,11 @@ Clonar el repositorio
 Instalar dependencias
 
 ```bash
-  Dentro del repositorio abrir consola y escribir `npm install`
+  Dentro del repositorio abrir consola y escribir "npm install"
 ```
 
 Levantar el servidor
 
 ```bash
-  En la misma consola escribir `npm start`
+  En la misma consola escribir "npm start"
 ```
