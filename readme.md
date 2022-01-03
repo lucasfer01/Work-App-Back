@@ -5,11 +5,17 @@
 Clonar el repositorio
 
 ```bash
-  git clone https://github.com/lucasfer01/Work-App-Back
+  git clone https://github.com/lucasfer01/Work-App-Back.git
 ```
 
-Dentro del respositorio
+Instalar dependencias
 
 ```bash
-  Abrir consola y escribir `npm install`
+  Dentro del repositorio abrir consola y escribir `npm install`
+```
+
+Levantar el servidor
+
+```bash
+  En la misma consola escribir `npm start`
 ```
