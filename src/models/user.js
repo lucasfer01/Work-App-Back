@@ -1,40 +1,43 @@
-// Mongoose
-const { Schema, model } = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../database/db');
 
-// Models
-const userSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
+// Definimos el modelo
+const userModel = sequelize.define('User', {
+    usr_id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
     },
-    email: {
-        type: String,
-        unique: true,
-        required: true
+    usr_username: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
-    photo: {
-        type: String
+    usr_password: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    description: {
-        type: String
+    usr_email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            isEmail: true
+        }
     },
-    servicesOffered: {
-        type: Array
+    usr_photo: {
+        type: DataTypes.STRING
     },
-    workHistory: {
-        type: Array
+    usr_role: {
+        type: DataTypes.ENUM('user', 'admin')
     },
-    employeeHistory: {
-        type: Array
+    usr_description: {
+        type: DataTypes.STRING
     },
-    reputation: {
-        type: Array
+    usr_location: {
+        type: DataTypes.STRING // INVESTIGAR!!!
+    },
+    usr_score: {
+        type: DataTypes.INTEGER
     }
-},{
-    timestamps: true,
-    versionKey: false 
 });
 
-// exportamos modelo
-module.exports = model('user', userSchema);
+module.exports = userModel;
