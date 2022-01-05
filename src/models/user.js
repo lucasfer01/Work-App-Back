@@ -33,7 +33,7 @@ const userModel = sequelize.define('User', {
         type: DataTypes.STRING
     },
     usr_location: {
-        type: DataTypes.STRING // INVESTIGAR!!!
+        type: DataTypes.JSON // Google map!!
     },
     usr_score: {
         type: DataTypes.INTEGER

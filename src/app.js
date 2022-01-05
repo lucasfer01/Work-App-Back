@@ -5,20 +5,23 @@ const app = express();
 const config = require('./config');
 // Rutas
 const userRoutes = require('./routes/user.routes');
+const jobRoutes = require('./routes/job.routes');
 // Database
 const sequelize = require('./database/db');
 
-
 // Middleware
 app.use(express.json());
-
 
 // Rutas
 app.get('/', (req, res) => {
     res.send('Hola funciona home');
 });
 
+// Rutas Usuarios
 app.use('/user', userRoutes);
+
+// Rutas Trabajos
+app.use('/job', jobRoutes);
 
 // Server
 const server = app.listen(config.PORT, () => {
