@@ -9,7 +9,7 @@ const createUser = (req, res) => {
     userModel.findOne({ where: { usr_username: dataUser.usr_username } })
         .then(response => {
             // Si existe no lo creamos
-            if (response) return res.status(304).json('El usuario ya existe');
+            if (response) return res.status(304).send('El usuario ya existe');
 
             // Creamos el nuevo usuario
             userModel.create({
@@ -27,7 +27,7 @@ const createUser = (req, res) => {
         });
 }
 
-// Mostrar usuario
+// Mostrar usuarios
 const showUsers = (req, res) => {
     // Buscar todos los usuarios
     userModel.findAll()
