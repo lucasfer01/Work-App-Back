@@ -1,5 +1,5 @@
 // User model
-const userModel = require('../models/User');
+const userModel = require('../models/user');
 
 // Crear usuario
 const createUser = (req, res) => {
