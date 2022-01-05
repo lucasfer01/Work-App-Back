@@ -1,61 +1,46 @@
 // User model
-const user = require('../models/user');
+const userModel = require('../models/User');
 
 // Crear usuario
-const createUser = async (req, res) => {
-    try {
-        const {
-            username,
-            email,
-            photo,
-            description,
-            servicesOffered,
-            workHistory,
-            employeeHistory,
-            reputation } = req.body;
+const createUser = (req, res) => {
+    // Cuerpo de la solicitud
+    const dataUser = req.body;
 
-        const findUser = await user.findOne({ username });
+    userModel.findOne({ where: { usr_username: dataUser.usr_username } })
+        .then(response => {
+            // Si existe no lo creamos
+            if (response) return res.status(304).json('El usuario ya existe');
 
-        if (findUser) return res.status(304).json('El username ya existe');
+            // Creamos el nuevo usuario
+            userModel.create({
+                ...dataUser
+            }).then(response => {
+                // Devolvemos el usuario creado
+                return res.status(200).json(response);
 
-        // Creamos el nuevo usuario
-        const createdUser = new user({
-            username,
-            email,
-            photo,
-            description,
-            servicesOffered,
-            workHistory,
-            employeeHistory,
-            reputation
-        })
+            }).catch(error => {
+                return res.json(error);
+            });
 
-        // Guardamos el usuario
-        const saveUser = await createdUser.save();
-
-        // Devolvemos el usuario creado
-        return res.status(200).json(saveUser);
-
-    } catch (error) {
-        res.json(error);
-    }
+        }).catch(error => {
+            return res.json(error);
+        });
 }
 
 // Mostrar usuario
-const showUser = async (req,res) => {
-    try {
-        // Buscar todos los usuarios
-        const users = await user.find();
+const showUsers = (req, res) => {
+    // Buscar todos los usuarios
+    userModel.findAll()
+        .then(response => {
+            // Retornamos los usuarios encontrados
+            return res.status(200).json(response);
 
-        // Retornamos los usuarios encontrados
-        return res.status(200).json(users);
-
-    } catch(error) {
-        res.json(error);
-    }
+        }).catch(error => {
+            return res.json(error);
+        });
 }
 
 module.exports = {
     createUser,
-    showUser
+    showUsers
 }
