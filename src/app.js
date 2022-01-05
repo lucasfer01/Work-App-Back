@@ -1,30 +1,34 @@
-// MongoDb
-const mongoose = require('mongoose');
-const { PORT, MONGO_URL } = process.env;
 // Express
 const express = require('express');
 const app = express();
-//env
+// Enviroment
 const config = require('./config');
+// Rutas
+const userRoutes = require('./routes/user.routes');
+// Database
+const sequelize = require('./database/db');
 
-mongoose
-    .connect(config.MONGO_URL)
-    .then((res) => {
-        console.log(`Conectado a ${config.MONGO_URL}`);
-    })
-    .catch((error) => {
-        console.log(error);
-    });
 
 // Middleware
 app.use(express.json());
 
+
 // Rutas
-app.get('/', (req,res) => {
-    res.send('Hola funciona');
+app.get('/', (req, res) => {
+    res.send('Hola funciona home');
 });
+
+app.use('/user', userRoutes);
 
 // Server
 const server = app.listen(config.PORT, () => {
-    console.log(`Escuchando en puerto: ${config.PORT}`);
+    console.log(`Escuchando http://localhost:${config.PORT}`);
+
+    // Conexion a la base de datos
+    sequelize.sync({ force: true })
+        .then(() => {
+            console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
+        }).catch(error => {
+            console.log(error);
+        });
 });
