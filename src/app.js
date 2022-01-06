@@ -10,21 +10,25 @@ const jobRoutes = require('./routes/job.routes');
 const { sequelize } = require('./database/db');
 // Cors
 const cors = require('cors');
+// Morgan
+const morgan = require('morgan');
+
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'));
+
 
 // Rutas
 app.get('/', (req, res) => {
     res.send('Hola funciona home');
 });
 
-// Rutas Usuarios
-app.use('/user', userRoutes);
+app.use('/user', userRoutes); // Rutas Usuarios
 
-// Rutas Trabajos
-app.use('/job', jobRoutes);
+app.use('/job', jobRoutes); // Rutas Trabajos
+
 
 // Server
 app.listen(config.PORT, () => {
