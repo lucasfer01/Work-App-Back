@@ -27,3 +27,6 @@ Levantar el servidor
 ```bash
   En la misma consola escribir "npm start"
 ```
+
+
+--test
