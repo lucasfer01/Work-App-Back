@@ -1,18 +1,18 @@
 // User model
-const userModel = require('../models/user');
+const { User } = require('../database/db');
 
 // Crear usuario
 const createUser = (req, res) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
 
-    userModel.findOne({ where: { usr_username: dataUser.usr_username } })
+    User.findOne({ where: { usr_username: dataUser.usr_username } })
         .then(response => {
             // Si existe no lo creamos
-            if (response) return res.status(304).json('El usuario ya existe');
+            if (response) return res.status(304).send('El usuario ya existe');
 
             // Creamos el nuevo usuario
-            userModel.create({
+            User.create({
                 ...dataUser
             }).then(response => {
                 // Devolvemos el usuario creado
@@ -27,10 +27,10 @@ const createUser = (req, res) => {
         });
 }
 
-// Mostrar usuario
+// Mostrar usuarios
 const showUsers = (req, res) => {
     // Buscar todos los usuarios
-    userModel.findAll()
+    User.findAll()
         .then(response => {
             // Retornamos los usuarios encontrados
             return res.status(200).json(response);
