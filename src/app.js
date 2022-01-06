@@ -8,8 +8,11 @@ const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 // Database
 const { sequelize } = require('./database/db');
+// Cors
+const cors = require('cors');
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // Rutas
@@ -24,7 +27,7 @@ app.use('/user', userRoutes);
 app.use('/job', jobRoutes);
 
 // Server
-const server = app.listen(config.PORT, () => {
+app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
