@@ -6,6 +6,7 @@ const config = require('./config');
 // Rutas
 const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
+const {userJobRoutes} = require('./routes/user_job.routes');
 // Database
 const { sequelize } = require('./database/db');
 // Cors
@@ -29,7 +30,8 @@ app.use('/user', userRoutes); // Rutas Usuarios
 
 app.use('/job', jobRoutes); // Rutas Trabajos
 
-
+app.use('/user-job', userJobRoutes); // Ruta agregar oficio a usuario
+ 
 // Server
 app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
