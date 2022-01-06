@@ -7,7 +7,7 @@ const config = require('./config');
 const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 // Database
-const sequelize = require('./database/db');
+const { sequelize } = require('./database/db');
 
 // Middleware
 app.use(express.json());

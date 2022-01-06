@@ -1,5 +1,5 @@
 // Job model
-const jobModel = require('../models/job');
+const { Job } = require('../database/db');
 
 // Create job
 const createJob = (req, res) => {
@@ -7,7 +7,7 @@ const createJob = (req, res) => {
     const dataJob = req.body;
 
     // Buscamos el oficio
-    jobModel.findOne({
+    Job.findOne({
         where: {
             job_name: dataJob.job_name
         }
@@ -16,7 +16,7 @@ const createJob = (req, res) => {
         if (response) return res.status(304).send('El oficio ya existe');
 
         // Si no existe lo creamos
-        jobModel.create({
+        Job.create({
             // Le pasamos la data del cuerpo de la solicitud
             ...dataJob
         }).then(response => {
@@ -33,9 +33,9 @@ const createJob = (req, res) => {
 }
 
 // Mostrar los trabajos
-const showJobs = (req,res) => {
+const showJobs = (req, res) => {
     // Buscamos todos los usuarios
-    jobModel.findAll()
+    Job.findAll()
         .then(response => {
             // Retornamos todos los usuarios encotrados
             return res.status(200).json(response);
