@@ -18,8 +18,10 @@ Crear archivo `.env` y crear las variables de entorno
 
 ```bash
   PORT=3000
-
-  MONGO_URL='mongodb+srv://mongodb:mongodb@cluster0.mst5k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+  POSTGRES_HOST=localhost
+  POSTGRES_USER=postgres
+  POSTGRES_PASSWORD= aca va tu contraseña
+  POSTGRES_DB_NAME=work_app
 ```
 
 Levantar el servidor
@@ -27,6 +29,3 @@ Levantar el servidor
 ```bash
   En la misma consola escribir "npm start"
 ```
-
-
---test
