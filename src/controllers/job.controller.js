@@ -2,7 +2,7 @@
 const { Job } = require('../database/db');
 
 // Create job
-const createJob = (req, res) => {
+const createJob = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataJob = req.body;
 
@@ -24,16 +24,16 @@ const createJob = (req, res) => {
             return res.status(200).json(response);
 
         }).catch(error => {
-            return res.json(error);
+            return next(error);
         });
 
     }).catch(error => {
-        return res.json(error);
+        return next(error);
     })
 }
 
 // Mostrar los trabajos
-const showJobs = (req, res) => {
+const showJobs = (req, res,next) => {
     // Buscamos todos los usuarios
     Job.findAll()
         .then(response => {
@@ -41,12 +41,54 @@ const showJobs = (req, res) => {
             return res.status(200).json(response);
 
         }).catch(error => {
-            return res.json(error);
+            return next(error);
         })
+}
+
+// Mostrar trabajo por id
+const showJobById = (req,res,next) => {
+    // jobId por url
+    const { jobId } = req.params;
+
+    // Buscamos el trabajo
+    Job.findByPk(jobId)
+        .then(job => res.json(job)) // Mostramos el trabjao encontrado
+        .catch(error => next(error));
+}
+
+// Actualizar trabajo
+const modifyJob = (req,res,next) => {
+    // jobId por url
+    const { jobId } = req.params;
+    // Data a actualizar
+    const dataJob = req.body;
+
+    // Buscamos el trabajo
+    Job.findByPk(jobId)
+        .then(job => job.update({ // actualizamos el trabajo con la data del body
+            ...dataJob
+        }))
+        .then(jobUpdated => res.json(jobUpdated)) // Devolvemos el trabajo actualizado
+        .catch(error => next(error));
+}
+
+// Eliminar trabajo
+const deleteJob = (req,res,next) => {
+    // jobId por url
+    const { jobId } = req.params;
+
+    // Buscamos el trabajo por id
+    Job.findByPk(jobId)
+        .then(job => job.destroy()) // Eliminamos le trabajo
+        .then(response => res.sendStatus(200)) // Si todo sale bien enviamos un status 200
+        .catch(error => next(error));
 }
 
 // Exportamos los controladores
 module.exports = {
     createJob,
-    showJobs
+    showJobs,
+    showJobById,
+    modifyJob,
+    deleteJob
 }

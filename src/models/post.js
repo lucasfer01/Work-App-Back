@@ -9,6 +9,12 @@ module.exports = (sequelize) => {
             primaryKey : true, 
             autoIncrement: true
         },
+        post_title: {
+            type: DataTypes.STRING
+        },
+        post_status: {
+            type: DataTypes.ENUM('status 1', 'status 2')
+        },
         post_description: {
             type: DataTypes.STRING
         },
