@@ -29,7 +29,7 @@ const {User, Job, Post} = sequelize.models;
 User.belongsToMany(Job, {through: 'User_Job'}); // user-job
 Job.belongsToMany(User, {through: 'User_Job'}); // user-job
 
-User.hasMany(Post); // user-post
+User.hasMany(Post, {foreignKey: 'usr_id'}); // user-post
 Post.belongsTo(User); // user-post
 
 module.exports = {
