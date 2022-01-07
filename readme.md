@@ -29,3 +29,63 @@ Levantar el servidor
 ```bash
   En la misma consola escribir "npm start"
 ```
+
+</br>
+
+## Endpoints
+
+### Usuarios
+````
+RUTA: http://localhost:3000/user
+
+SUBRUTAS:
+  Get:
+    '/' (Mostrar todo los usuarios)
+
+    '/:userId' (Buscar usuario por id y mostrarlo)
+
+  Post:
+    '/' (Crear usuario)
+
+  Put:
+    '/:userId' (Modificar usuario)
+
+  Delete:
+    '/:userId' (Eliminar usuario)  
+````
+
+### Oficios
+
+````
+RUTA: http://localhost:3000/job
+
+SUBRUTAS:
+  Get:
+    '/' (Mostrar todos los oficios)
+
+    '/:jobId' (Buscar oficio por id y mostrarlo)
+
+  Post:
+    '/' (Crear oficio)
+
+  Put:
+    '/:jobId' (Actualizar oficio)
+
+  Delete:
+    '/:jobId' (Eliminar oficio)
+````
+
+### Posteos
+
+````
+RUTA: http://localhost:3000/post
+
+SUBRUTAS:
+  Get:
+    '/' (Mostrar todos los oficios)
+
+    '/:postId' (Buscar post por id y mostrarlo)
+
+  Post:
+    '/' (Crear post)
+````
