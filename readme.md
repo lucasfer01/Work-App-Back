@@ -75,6 +75,16 @@ SUBRUTAS:
     '/:jobId' (Eliminar oficio)
 ````
 
+### Conectar oficio con usuario
+
+````
+RUTA: http://localhost:3000/user-job
+
+SUBRUTAS:
+  Post:
+    '/:userId/:jobId' (Conecta el usuario del id con el trabajo del id)
+````
+
 ### Posteos
 
 ````
