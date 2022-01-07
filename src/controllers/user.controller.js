@@ -76,12 +76,20 @@ const modifyUser = (req, res, next) => {
 
 // Eliminar usuarios
 const deleteUser = (req,res,next) => {
+    // userId req.params
+    const { userId } = req.params;
 
+    // Buscamos el usuario
+    User.findByPk(userId)
+        .then(user => user.destroy()) // Eliminamos el usuario
+        .then(response => res.sendStatus(200))
+        .catch(error => next(error));
 }
 
 module.exports = {
     createUser,
     showUsers,
     showUserById,
-    modifyUser
+    modifyUser,
+    deleteUser
 }
