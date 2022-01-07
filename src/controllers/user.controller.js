@@ -8,6 +8,7 @@ const createUser = (req, res) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
 
+    // Buscamos el usuario
     User.findOne({ where: { usr_username: dataUser.usr_username } })
         .then(response => {
             // Si existe no lo creamos
@@ -44,7 +45,19 @@ const showUsers = (req, res) => {
         });
 }
 
+// Mostrar usuario por id
+const showUserById = (req,res) => {
+    // UserId req.params
+    const { userId } = req.params;
+
+    // Buscamos el usuario por id
+    User.findByPk(userId)
+        .then(user => res.json(user))
+        .catch(error => res.json(error));
+}
+
 module.exports = {
     createUser,
-    showUsers
+    showUsers,
+    showUserById
 }
