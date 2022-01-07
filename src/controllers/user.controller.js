@@ -1,5 +1,7 @@
 // User model
 const { User } = require('../database/db');
+// Post model
+const { Post } = require('../database/db');
 
 // Crear usuario
 const createUser = (req, res) => {
@@ -30,7 +32,9 @@ const createUser = (req, res) => {
 // Mostrar usuarios
 const showUsers = (req, res) => {
     // Buscar todos los usuarios
-    User.findAll()
+    User.findAll({
+        include: Post
+    })
         .then(response => {
             // Retornamos los usuarios encontrados
             return res.status(200).json(response);

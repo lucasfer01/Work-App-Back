@@ -5,10 +5,10 @@ const { DataTypes } = require('sequelize');
 // Job model
 module.exports = (sequelize) => {
     sequelize.define('job', {
-        job_id: {
-            type: DataTypes.UUID,
-            primaryKey: true,
-            defaultValue: DataTypes.UUIDV4
+        job_id : {
+            type: DataTypes.INTEGER,
+            primaryKey : true, 
+            autoIncrement: true
         },
         job_name: {
             type: DataTypes.STRING,
