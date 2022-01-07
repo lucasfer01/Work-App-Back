@@ -4,7 +4,7 @@ const { User } = require('../database/db');
 const { Post } = require('../database/db');
 
 // Crear usuario
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
 
@@ -22,16 +22,16 @@ const createUser = (req, res) => {
                 return res.status(200).json(response);
 
             }).catch(error => {
-                return res.json(error);
+                return next(error);
             });
 
         }).catch(error => {
-            return res.json(error);
+            return next(error);
         });
 }
 
 // Mostrar usuarios
-const showUsers = (req, res) => {
+const showUsers = (req, res, next) => {
     // Buscar todos los usuarios
     User.findAll({
         include: Post
@@ -41,23 +41,47 @@ const showUsers = (req, res) => {
             return res.status(200).json(response);
 
         }).catch(error => {
-            return res.json(error);
+            return next(error);
         });
 }
 
 // Mostrar usuario por id
-const showUserById = (req,res) => {
+const showUserById = (req, res, next) => {
     // UserId req.params
     const { userId } = req.params;
 
     // Buscamos el usuario por id
     User.findByPk(userId)
         .then(user => res.json(user))
-        .catch(error => res.json(error));
+        .catch(error => next(error));
+}
+
+// Modificar usuarios
+const modifyUser = (req, res, next) => {
+    // userId req.params
+    const { userId } = req.params;
+    // Data a modificar
+    const dataUser = req.body;
+
+    // Buscamos el usuario por el id
+    User.findByPk(userId)
+    .then(user => {
+        return user.update({ // Actualizamos el usuario con la data recibida por body
+            ...dataUser
+        })
+    })
+    .then(userUpdate => res.json(userUpdate)) // Mostramos le usuario actualizado
+    .catch(error => next(error));
+}
+
+// Eliminar usuarios
+const deleteUser = (req,res,next) => {
+
 }
 
 module.exports = {
     createUser,
     showUsers,
-    showUserById
+    showUserById,
+    modifyUser
 }
