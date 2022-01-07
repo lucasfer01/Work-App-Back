@@ -1,15 +1,18 @@
 // Router Express
 const { Router } = require('express');
 // User Controller
-const { createUser, showUsers } = require('../controllers/user.controller');
+const { createUser, showUsers, showUserById } = require('../controllers/user.controller');
 
 // Usamos router
 const userRoutes = Router();
 
 // Creamos rutas
-userRoutes.get('/', showUsers);
+userRoutes.get('/', showUsers); // Obtenemos todos los usuarios
 
-userRoutes.post('/', createUser);
+userRoutes.get('/:userId', showUserById); // Buscamos user por id y los mostramos
+
+userRoutes.post('/', createUser); // Creamos un usuario
+
 
 // Exportamos rutas
 module.exports = userRoutes;
