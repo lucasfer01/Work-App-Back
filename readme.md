@@ -34,8 +34,6 @@ Levantar el servidor
 
 ## Endpoints
 
-</br>
-
 ### Usuarios
 ````
 RUTA: http://localhost:3000/user
