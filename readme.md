@@ -98,4 +98,10 @@ SUBRUTAS:
 
   Post:
     '/' (Crear post)
+
+  Put:
+    '/:postId' (Actualizar el post)
+
+  Delete:
+    '/:postId' (Eliminar post)
 ````
