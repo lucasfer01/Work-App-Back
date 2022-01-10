@@ -8,6 +8,7 @@ const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 const {userJobRoutes} = require('./routes/user_job.routes');
 const {postRouter} = require('./routes/post.routes');
+const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
 // Database
 const { sequelize } = require('./database/db');
 // Cors
@@ -34,6 +35,8 @@ app.use('/job', jobRoutes); // Rutas Trabajos
 app.use('/user-job', userJobRoutes); // Ruta agregar oficio a usuario
 
 app.use('/post', postRouter); // Ruta agregar post
+
+app.use('/authUser', authUserRoutes); // Autentificar usuarios
  
 // Server
 app.listen(config.PORT, () => {
