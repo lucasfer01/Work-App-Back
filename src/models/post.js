@@ -23,6 +23,12 @@ module.exports = (sequelize) => {
         },
         post_type: {
             type: DataTypes.ENUM('contratar', 'ofrecer')
+        }, 
+        post_priority: {
+            type: DataTypes.STRING
+        },
+        post_fee: {
+            type: DataTypes.INTEGER
         }
     })
 }
