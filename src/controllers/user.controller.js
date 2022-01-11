@@ -1,7 +1,8 @@
 // User model
 const { User } = require('../database/db');
 // Post model
-const { Post } = require('../database/db');
+const { Post, Job } = require('../database/db');
+
 
 // Crear usuario
 const createUser = (req, res, next) => {
@@ -34,7 +35,7 @@ const createUser = (req, res, next) => {
 const showUsers = (req, res, next) => {
     // Buscar todos los usuarios
     User.findAll({
-        include: Post
+        include: [Job,Post]
     })
         .then(response => {
             // Retornamos los usuarios encontrados

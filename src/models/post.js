@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
         post_status: {
             type: DataTypes.ENUM('status 1', 'status 2')
         },
-        post_shortDescription: {
+        post_shortdescription: {
             type: DataTypes.STRING
         },
         post_description: {
