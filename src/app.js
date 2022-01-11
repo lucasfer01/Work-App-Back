@@ -9,6 +9,7 @@ const jobRoutes = require('./routes/job.routes');
 const {userJobRoutes} = require('./routes/user_job.routes');
 const {postRouter} = require('./routes/post.routes');
 const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
+const { chatRouter } = require('./routes/chat.routes');
 // Database
 const { sequelize } = require('./database/db');
 // Cors
@@ -27,6 +28,8 @@ app.use(morgan('dev'));
 app.get('/', (req, res) => {
     res.send('Hola funciona home');
 });
+
+app.use('/', chatRouter); // Ruta Chat
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
