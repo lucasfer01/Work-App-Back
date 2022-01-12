@@ -56,6 +56,21 @@ const showJobById = (req,res,next) => {
         .catch(error => next(error));
 }
 
+// Mostrar trabajo por nombre
+const showJobByName = (req,res,next) => {
+    // jobName por query
+    const { jobName } = req.query;
+
+    // Buscamos el oficio por nombre
+    Job.findOne({
+        where: {
+            job_name: jobName
+        }
+    })
+    .then(job => res.json(job))
+    .catch(error => next(error));
+}
+
 // Actualizar trabajo
 const modifyJob = (req,res,next) => {
     // jobId por url
@@ -90,5 +105,6 @@ module.exports = {
     showJobs,
     showJobById,
     modifyJob,
-    deleteJob
+    deleteJob,
+    showJobByName
 }
