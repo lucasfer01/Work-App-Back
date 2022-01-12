@@ -3,6 +3,7 @@ const { DataTypes } = require("sequelize");
 
 // Definimos el modelo
 module.exports = (sequelize) => {
+<<<<<<< HEAD
   sequelize.define("user", {
     usr_id: {
       /* type: DataTypes.INTEGER, */
@@ -44,3 +45,41 @@ module.exports = (sequelize) => {
     },
   });
 };
+=======
+    sequelize.define('user', {
+        usr_id : {
+            type: DataTypes.STRING,
+            primaryKey : true,
+            unique: true, 
+            allowNull: false
+        },
+        usr_username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        usr_email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isEmail: true
+            },
+            unique: true
+        },
+        usr_photo: {
+            type: DataTypes.ARRAY(DataTypes.STRING)
+        },
+        usr_role: {
+            type: DataTypes.ENUM('user', 'admin')
+        },
+        usr_description: {
+            type: DataTypes.STRING
+        },
+        usr_location: {
+            type: DataTypes.JSON // Google map!!
+        },
+        usr_score: {
+            type: DataTypes.INTEGER
+        }
+    });
+}
+>>>>>>> 79c7acf4e56aad93d9133a80a1dee99f0f0e9989
