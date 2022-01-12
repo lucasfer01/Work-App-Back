@@ -19,7 +19,8 @@ module.exports = (sequelize) => {
             allowNull: false,
             validate: {
                 isEmail: true
-            }
+            },
+            unique: true
         },
         usr_photo: {
             type: DataTypes.STRING
