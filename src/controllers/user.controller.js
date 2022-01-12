@@ -7,6 +7,7 @@ const { Post } = require('../database/db');
 const createUser = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
+    console.log(dataUser);
 
     // Buscamos el usuario
     User.findOne({ where: { usr_username: dataUser.usr_username } })
