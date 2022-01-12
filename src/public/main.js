@@ -23,21 +23,5 @@ const subscription = async () => {
     console.log("subscribed!");
 }
 
-const form = document.querySelector("#myform");
-const message = document.querySelector("#message");
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    fetch("/new-message", {
-        method: "POST",
-        body: JSON.stringify({
-            message: message.value,
-        }),
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-    form.reset();
-})
-
 subscription();
 

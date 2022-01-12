@@ -7,11 +7,11 @@ const subscribe = async (req, res, next) => {
 }
 
 const newMessage = async (req, res, next) => {
-    const {message} = req.body;
+    const {title, message} = req.body;
 
     const payload = JSON.stringify({
-        title: 'Nueva oportunidad de trabajo',
-        message: message,
+        title,
+        message,
     });
 
     try {
