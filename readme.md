@@ -65,6 +65,8 @@ SUBRUTAS:
 
     '/:jobId' (Buscar oficio por id y mostrarlo)
 
+    '/job?jobName=nombreDeOficio' (Buscar oficio por nombre)
+
   Post:
     '/' (Crear oficio)
 
@@ -81,6 +83,9 @@ SUBRUTAS:
 RUTA: http://localhost:3000/user-job
 
 SUBRUTAS:
+  Get: 
+    '/job?jobName=NombreDelOficio' (Obtener todos los trabadores de un oficio)
+    
   Post:
     '/:userId/:jobId' (Conecta el usuario del id con el trabajo del id)
 ````
@@ -104,4 +109,14 @@ SUBRUTAS:
 
   Delete:
     '/:postId' (Eliminar post)
+````
+
+### Checkout
+
+````
+RUTA: http://localhost:3000/checkout
+
+SUBRUTAS:
+  Post:
+    '/' (Redige a la pagina de pago)
 ````
