@@ -23,7 +23,7 @@ module.exports = (sequelize) => {
             unique: true
         },
         usr_photo: {
-            type: DataTypes.STRING
+            type: DataTypes.ARRAY(DataTypes.STRING)
         },
         usr_role: {
             type: DataTypes.ENUM('user', 'admin')
