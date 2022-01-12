@@ -8,6 +8,7 @@ const { Post, Job } = require('../database/db');
 const createUser = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
+    console.log(dataUser);
 
     // Buscamos el usuario
     User.findOne({ where: { usr_username: dataUser.usr_username } })
@@ -52,7 +53,9 @@ const showUserById = (req, res, next) => {
     const { userId } = req.params;
 
     // Buscamos el usuario por id
-    User.findByPk(userId)
+    User.findByPk(userId, {
+        include: [Job,Post]
+    })
         .then(user => res.json(user))
         .catch(error => next(error));
 }
