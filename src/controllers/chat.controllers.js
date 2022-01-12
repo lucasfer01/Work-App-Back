@@ -1,59 +1,49 @@
-const fs = require('fs');
-const qrcode = require('qrcode-terminal');
-const { Client } = require('whatsapp-web.js');
+const { Telegraf } = require('telegraf');
+//Telegraf es un constructor que necesita el token de autenticación de mi cuenta.
+const bot = new Telegraf('5091525623:AAGB-DPu3-6nyTqvz3vnAyx3NuAq5gucYhc');
 
-const SESSION_FILE_PATH = './session.js';
-
-const country_code = "54";
-const number = "1161626871";
-const msg = "Hola mi rey!";
-
-let sessionData;
-if(fs.existsSync(SESSION_FILE_PATH)) {
-    sessionData = require(SESSION_FILE_PATH)
-}
-
-const client = new Client({
-    session: sessionData
+bot.start((ctx) => {
+    //ctx.from -> quien envía el mensaje.
+    ctx.reply('Bienvenido ' + ctx.from.first_name);
 });
 
-client.initialize();
-
-client.on('qr', qr => {
-    qrcode.generate(qr, {small: true})
+bot.help((ctx) => {
+    ctx.reply('Ayuda');
 });
 
-client.on('ready', () => {
-    console.log("Cliente listo...")
-    let chatId = country_code + number + "@c.us";
-    client.sendMessage(chatId, msg)
-        .then(res => {
-            if (res.id.fromMe) {
-                console.log("El mensaje fue enviado.");
-            };
-        });
+bot.settings((ctx) => {
+    ctx.reply('Configurar');
 });
-
-client.on('authenticated', s => {
-    sessionData = s;
-    fs.writeFile(SESSION_FILE_PATH, JSON.stringify(s), err => {
-        if(err) {
-            console.log("Tienes un error ", err)
-        }
-    });
+//command configura el bot, pongo en un arreglo de strings como se lo puede escribir xq es sensible a mayusculas
+bot.command(['mycommand', 'Mycommand', 'MyCommand', 'MYCOMMAND'], (ctx) => {
+    ctx.reply('Mi comando configurado');
 });
-
-client.on('auth_failure', msg => {
-    console.error('Fallo en la autenticación ', msg)
+//Escucha un texto en específico.
+bot.hears('computer', ctx => {
+    ctx.reply('Hey, vendo computadoras');
 });
-
-client.on('message', msg => {
-    if(msg.body === "Hola") {
-        client.sendMessage(msg.from, "Hola, ¿Cómo lo puedo ayudar?")
-    } else if(msg.body === "Ayuda") {
-        client.sendMessage(msg.from)
-    }
-})
+/* Para cuando el ususario simplemente escriba.
+bot.on('text', ctx => {
+    ctx.reply('Estás escribiendo...');
+});*/
+//Para reconocer los stickers.
+bot.on('sticker', ctx => {
+    ctx.reply('Has enviado un sticker');
+});
+//Este método es para saber si se mencionó a alguien.
+bot.mention('BotFather', ctx => {
+    ctx.reply('Has mencionado a alguien.');
+});
+//Reconoce el teléfono
+bot.phone('+54 11-2233-4455', ctx => {
+    ctx.reply('Este es un número de teléfono.');
+});
+//Reconoce los hashtags.
+bot.hashtag('programando', ctx => {
+    ctx.reply('este es un hashtag.');
+});
+//Inicia el bot
+bot.launch();
 
 const chat = (req, res) => {
     res.send("Holaa") 
@@ -61,4 +51,4 @@ const chat = (req, res) => {
 
 module.exports = {
     chat
-}
+};
