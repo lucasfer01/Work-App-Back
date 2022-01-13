@@ -10,6 +10,7 @@ const {userJobRoutes} = require('./routes/user_job.routes');
 const {postRouter} = require('./routes/post.routes');
 const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
 const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
+const { orderRoutes } = require('./routes/order.routes');
 // Database
 const { sequelize } = require('./database/db');
 // Cors
@@ -40,6 +41,8 @@ app.use('/post', postRouter); // Ruta agregar post
 app.use('/authUser', authUserRoutes); // Autentificar usuarios
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
+
+app.use('/order', orderRoutes); // Rutas order
  
 // Server
 app.listen(config.PORT, () => {

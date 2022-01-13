@@ -1,7 +1,7 @@
 // Requerimos mercadopago
 const mercadopago = require('mercadopago');
 // Enviroment
-const { MP_ACCESS_TOKEN } = require('../config');
+const { MP_ACCESS_TOKEN, MP_FAILURE_URL, MP_SUCCESS_URL } = require('../config');
 
 
 // Access token
@@ -18,14 +18,19 @@ const checkout = (req, res, next) => {
     const preference = {
         items: [{
             ...dataPreference
-        }]
+        }], 
+        back_urls: {
+            success: MP_SUCCESS_URL,
+            failure: MP_FAILURE_URL,
+            pending: ''
+        }
     }
 
     // Crear preferencia
     mercadopago.preferences.create(preference)
         .then(response => {
-            
-            res.json(response.body); // Redirigir a pagina de pago
+            // Crear preferencia y retornarla
+            res.json(response.body);
         })
         .catch(error => next(error));
 }

@@ -7,5 +7,7 @@ module.exports = {
     POSTGRES_HOST: process.env.POSTGRES_HOST,
     POSTGRES_DB_NAME: process.env.POSTGRES_DB_NAME,
     MP_PUBLIC_KEY: process.env.MP_PUBLIC_KEY,
-    MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN
+    MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN,
+    MP_FAILURE_URL: process.env.MP_FAILURE_URL,
+    MP_SUCCESS_URL: process.env.MP_SUCCESS_URL
 }
