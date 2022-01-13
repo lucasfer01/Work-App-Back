@@ -25,7 +25,7 @@ const checkout = (req, res, next) => {
     mercadopago.preferences.create(preference)
         .then(response => {
             
-            res.redirect(response.body.init_point); // Redirigir a pagina de pago
+            res.json(response.body); // Redirigir a pagina de pago
         })
         .catch(error => next(error));
 }
