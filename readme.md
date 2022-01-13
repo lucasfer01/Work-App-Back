@@ -121,4 +121,6 @@ JSON: {
         "quantity": 1,    <-- OBLIGATORIO
         "unit_price": 10    <-- OBLIGATORIO
       }
+
+RESULTADO: Devuelve un objeto con informacion de la operacion, pero lo que importa es el campo "init_point", el cual es un link que lleva a la pagina para completar el pago
 ````
