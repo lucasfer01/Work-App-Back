@@ -65,6 +65,8 @@ SUBRUTAS:
 
     '/:jobId' (Buscar oficio por id y mostrarlo)
 
+    '/job?jobName=NombreDelOficio'
+
   Post:
     '/' (Crear oficio)
 
@@ -104,4 +106,21 @@ SUBRUTAS:
 
   Delete:
     '/:postId' (Eliminar post)
+````
+
+### Mercadopago
+
+````
+RUTA: http://localhost:3000/checkout
+
+JSON: {
+        "title": "Dummy Title",   <-- OBLIGATORIO
+        "description": "Dummy description",    <-- OBLIGATORIO
+        "picture_url": "http://www.myapp.com/myimage.jpg",
+        "category_id": "cat123",
+        "quantity": 1,    <-- OBLIGATORIO
+        "unit_price": 10    <-- OBLIGATORIO
+      }
+
+RESULTADO: Devuelve un objeto con informacion de la operacion, pero lo que importa es el campo "init_point", el cual es un link que lleva a la pagina para completar el pago
 ````

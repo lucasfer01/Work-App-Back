@@ -15,6 +15,7 @@ const {userJobRoutes} = require('./routes/user_job.routes');
 const {postRouter} = require('./routes/post.routes');
 const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
 const { chatRouter } = require('./routes/chat.routes');
+const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
 
 // Static content
 app.use(express.static(path.join(__dirname, '/public')));
@@ -53,6 +54,8 @@ app.use('/authUser', authUserRoutes); // Autentificar usuarios
 app.use('/subscription', subscriptionRoutes); // Suscribirse a notificaciones
 
 app.use('/new-message', newMessageRoutes); // Suscribirse a notificaciones
+
+app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
  
 // Server
 app.listen(config.PORT, () => {
