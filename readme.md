@@ -111,16 +111,30 @@ SUBRUTAS:
 ### Mercadopago
 
 ````
-RUTA: http://localhost:3000/checkout
+POST: http://localhost:3000/checkout
 
-JSON: {
-        "title": "Dummy Title",   <-- OBLIGATORIO
-        "description": "Dummy description",    <-- OBLIGATORIO
-        "picture_url": "http://www.myapp.com/myimage.jpg",
-        "category_id": "cat123",
-        "quantity": 1,    <-- OBLIGATORIO
-        "unit_price": 10    <-- OBLIGATORIO
-      }
+ENVIAR -->   JSON: {
+                    "title": "Dummy Title",   <-- OBLIGATORIO
+                    "description": "Dummy description",    <-- OBLIGATORIO
+                    "picture_url": "http://www.myapp.com/myimage.jpg",
+                    "category_id": "cat123",
+                    "quantity": 1,    <-- OBLIGATORIO
+                    "unit_price": 10    <-- OBLIGATORIO
+                  }
 
-RESULTADO: Devuelve un objeto con informacion de la operacion, pero lo que importa es el campo "init_point", el cual es un link que lleva a la pagina para completar el pago
+<-- DEVUELVE
+    RESULTADO: Devuelve un objeto con informacion de la operacion, pero lo que importa es el campo "init_point", el cual es un link que lleva a la pagina para completar el pago
+
+
+Credencial de prueba
+
+Numero de tarjeta: 5031 7557 3453 0604
+
+Vencimeinto: 11/25
+
+codigo de seguridad: 123
+
+Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
+
+los demas datos se pueden inventar, tales como dni y mail
 ````
