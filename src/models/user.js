@@ -36,6 +36,10 @@ module.exports = (sequelize) => {
         },
         usr_score: {
             type: DataTypes.INTEGER
+        },
+        usr_isActive: {
+            type: DataTypes.BOOLEAN,
+            defaultValue:  true
         }
     });
 }

@@ -36,6 +36,9 @@ const createUser = (req, res, next) => {
 const showUsers = (req, res, next) => {
     // Buscar todos los usuarios
     User.findAll({
+        where: {
+            usr_isActive: true
+        },
         include: [Job,Post]
     })
         .then(response => {
@@ -85,7 +88,7 @@ const deleteUser = (req,res,next) => {
 
     // Buscamos el usuario
     User.findByPk(userId)
-        .then(user => user.destroy()) // Eliminamos el usuario
+        .then(user => user.update({usr_isActive: !user.usr_isActive})) // Cambiamos usr_isActive
         .then(response => res.sendStatus(200))
         .catch(error => next(error));
 }

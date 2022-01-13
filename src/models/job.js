@@ -16,6 +16,10 @@ module.exports = (sequelize) => {
         },
         job_description: {
             type:DataTypes.STRING
+        },
+        job_isActive: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         }
     });
 }

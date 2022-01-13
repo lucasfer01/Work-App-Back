@@ -32,6 +32,10 @@ module.exports = (sequelize) => {
         },
         post_fee: {
             type: DataTypes.INTEGER
+        },
+        post_isActive: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         }
     })
 }
