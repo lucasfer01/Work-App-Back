@@ -12,9 +12,6 @@ module.exports = (sequelize) => {
         post_title: {
             type: DataTypes.STRING
         },
-        post_status: {
-            type: DataTypes.ENUM('status 1', 'status 2')
-        },
         post_shortdescription: {
             type: DataTypes.STRING
         },
@@ -23,9 +20,6 @@ module.exports = (sequelize) => {
         },
         post_photo: {
             type: DataTypes.ARRAY(DataTypes.STRING)
-        },
-        post_type: {
-            type: DataTypes.ENUM('contratar', 'ofrecer')
         }, 
         post_priority: {
             type: DataTypes.STRING

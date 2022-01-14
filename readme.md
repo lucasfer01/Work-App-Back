@@ -54,7 +54,21 @@ SUBRUTAS:
     '/:userId' (Modificar usuario)
 
   Delete:
-    '/:userId' (Eliminar usuario)  
+    '/:userId' (Eliminar usuario) 
+
+
+  JSON:
+    {
+      "usr_username": "Lucasfer01",
+      "usr_email": "mail@gmail.com",
+      "usr_id": "a2",
+      "usr_photo": ["Link 1", "Link 2", "Link 3"],
+      "usr_role": "user",
+      "usr_description": "Descripcion del perfil",
+      "usr_location": {latitud, longitud},
+      "usr_score": 5
+    }
+ 
 ````
 
 ### Oficios
@@ -78,6 +92,13 @@ SUBRUTAS:
 
   Delete:
     '/:jobId' (Eliminar oficio)
+
+
+  JSON:
+    {
+      "job_name": "fullstack developer",
+      "job_description": "Descripcion de fullstack developer"
+    }
 ````
 
 ### Conectar oficio con usuario
@@ -109,6 +130,28 @@ SUBRUTAS:
 
   Delete:
     '/:postId' (Eliminar post)
+
+
+  JSON:
+    {
+      "post_title": "FullStack Developer",
+      "post_description": "Frontend and Backend Developer",
+      "post_shortdescription": "Descripcion corta",
+      "post_photo": ["Link 1", "Link 2"],
+      "post_priority": "Urgente",
+      "post_fee": 140,
+      "usr_id": "id de usuario que hace el post"
+    }
+````
+
+### Relacion post con oficio
+
+````
+RUTA: 'http://localhost:3000'
+
+SUBRUTAS:
+  POST:
+    '/:workerPostId/:jobId' (Relacionar post con oficio)
 ````
 
 ### Mercadopago

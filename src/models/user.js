@@ -26,7 +26,8 @@ module.exports = (sequelize) => {
             type: DataTypes.ARRAY(DataTypes.STRING)
         },
         usr_role: {
-            type: DataTypes.ENUM('user', 'admin')
+            type: DataTypes.ENUM('user', 'admin'),
+            defaultValue: 'user'
         },
         usr_description: {
             type: DataTypes.STRING
