@@ -8,7 +8,6 @@ const { Post, Job, WorkerPost } = require('../database/db');
 const createUser = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
-    console.log(dataUser);
 
     // Buscamos el usuario
     User.findOne({ where: { usr_username: dataUser.usr_username } })
@@ -40,16 +39,19 @@ const showUsers = (req, res, next) => {
             usr_isActive: true
         },
         include: [{
+            required: false,
             model: Job,
             where: {
                 job_isActive: true
             }
         }, {
+            required: false,
             model: Post,
             where: {
                 post_isActive: true
             }
         }, {
+            required: false,
             model: WorkerPost,
             where: {
                 wp_isActive: true
@@ -71,18 +73,24 @@ const showUserById = (req, res, next) => {
     const { userId } = req.params;
 
     // Buscamos el usuario por id
-    User.findByPk(userId, {
+    User.findOne({
+        where: {
+            usr_id: userId
+        },
         include: [{
+            required: false,
             model: Job,
             where: {
                 job_isActive: true
             }
         }, {
+            required: false,
             model: Post,
             where: {
                 post_isActive: true
             }
         }, {
+            required: false,
             model: WorkerPost,
             where: {
                 wp_isActive: true

@@ -40,6 +40,7 @@ const showJobs = (req, res,next) => {
             job_isActive: true
         },
         include: [{
+            required: false,
             model: User,
             where: {
                 usr_isActive: true
@@ -63,10 +64,10 @@ const showJobById = (req,res,next) => {
     // Buscamos el trabajo
     Job.findOne({
         where: {
-            job_id: jobId,
-            job_isActive: true
+            job_id: jobId
         },
         include: [{
+            required: false,
             model: User,
             where: {
                 usr_isActive: true
@@ -85,10 +86,10 @@ const showJobByName = (req,res,next) => {
     // Buscamos el oficio por nombre
     Job.findOne({
         where: {
-            job_name: jobName,
-            job_isActive: true
+            job_name: jobName
         },
         include: [{
+            required: false,
             model: User,
             where: {
                 usr_isActive: true

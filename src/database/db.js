@@ -39,6 +39,9 @@ Job.belongsToMany(WorkerPost, {through: 'WorkerPost_Job'}); // WorkerPost-Job
 User.hasMany(WorkerPost, {foreignKey: 'usr_id'}); // User-workerpost
 WorkerPost.belongsTo(User); // User-Workerpost
 
+Post.belongsToMany(Job, {through: 'Post_Job'}); // Post-Job
+Job.belongsToMany(Post, {through: 'Post_Job'}); // Post-Job
+
 module.exports = {
     ...sequelize.models,
     sequelize

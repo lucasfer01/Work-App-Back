@@ -47,6 +47,7 @@ const showWorkerPostById = (req, res, next) => {
             wp_id: workerPostId
         },
         include: [{
+            required: false,
             model: Job,
             where: {
                 job_isActive: true

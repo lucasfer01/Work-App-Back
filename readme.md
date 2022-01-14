@@ -159,6 +159,15 @@ SUBRUTAS:
   DELETE:
     '/:workerpostId' ("Elimina" el workerpost)
 
+
+
+  JSON: {
+          "wp_title": "Titulo",
+          "wp_description": "Description",
+          "wp_photo": ["link1", "link2"],
+          "usr_id": "id de usuario que hizo el post"
+        }
+
 ````
 
 ### Relacionar workerpost con oficio

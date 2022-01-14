@@ -17,6 +17,7 @@ const { chatRouter } = require('./routes/chat.routes');
 const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
 const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
+const { postJobRoutes } = require('./routes/post_job.routes');
 
 // Static content
 app.use(express.static(path.join(__dirname, '/public')));
@@ -48,7 +49,9 @@ app.use('/job', jobRoutes); // Rutas Trabajos
 
 app.use('/user-job', userJobRoutes); // Ruta agregar oficio a usuario
 
-app.use('/workerpost-job', workerpostJobRouter);
+app.use('/workerpost-job', workerpostJobRouter); // Relacionar workerpost con oficio
+
+app.use('/post-job', postJobRoutes); // relacionar post con oficio
 
 app.use('/post', postRouter); // Ruta agregar post
 
