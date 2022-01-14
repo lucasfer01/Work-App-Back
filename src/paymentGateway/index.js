@@ -18,7 +18,7 @@ const checkout = (req, res, next) => {
     const preference = {
         items: [{
             ...dataPreference
-        }], 
+        }],
         back_urls: {
             success: MP_SUCCESS_URL,
             failure: MP_FAILURE_URL,
