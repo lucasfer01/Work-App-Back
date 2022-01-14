@@ -23,6 +23,11 @@ Crear archivo `.env` y crear las variables de entorno
   POSTGRES_PASSWORD= aca va tu contraseña
   POSTGRES_DB_NAME=work_app
 
+  MP_PUBLIC_KEY='TEST-c89f6107-933c-448b-85a0-8d16c06d11bf'
+  MP_ACCESS_TOKEN='TEST-6732755547074714-011214-d9dded86854d62687fb0b0a53f66a40e-272180329'
+  MP_SUCCESS_URL='http://localhost:3001/home'
+  MP_FAILURE_URL='http://localhost:3001/home'
+
   PUBLIC_VAPID_KEY=BIGOGlUA89Jmop6cxKKXBw26LSl679plMCPJ6oDykA5Ik6KlM90sBZcxy80tkPq5HIYd-55vc-M-3Xs1my8SgX4
   PRIVATE_VAPID_KEY=cAIh586rrv7DJm7IMefhlkUMoU4WhZQKW5yUzcUllrg
 ```
