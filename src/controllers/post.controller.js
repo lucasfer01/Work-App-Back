@@ -1,5 +1,5 @@
 // Post model
-const { Post } = require('../database/db');
+const { Post, Job } = require('../database/db');
 
 // Crea un post
 const createPost = (req, res, next) => {
@@ -34,7 +34,18 @@ const showPostById = (req, res, next) => {
     const { postId } = req.params;
 
     // Buscamos el post
-    Post.findByPk(postId)
+    Post.findOne({
+        where: {
+            post_id: postId
+        },
+        include: [{
+            required: false,
+            model: Job,
+            where: {
+                job_isActive: true
+            }
+        }]
+    })
         .then(post => res.json(post)) // Retornamos el post encontrado
         .catch(error => next(error));
 }

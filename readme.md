@@ -142,6 +142,43 @@ Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
 los demas datos se pueden inventar, tales como dni y mail
 ````
 
+
+### WorkerPost
+
+````
+RUTA: http://localhost:3000/workerPost
+
+SUBRUTAS:
+  POST: 
+    '/' (Crear workerPost)
+
+  GET: 
+    '/user/:userId' (Trae todos los workerpost del usuario)
+
+    '/:workerpostId' (Trae workerpost por id) 
+
+  PUT:
+    '/:workerpostId' (Actualizar datos de workerpost)
+
+  DELETE:
+    '/:workerpostId' ("Elimina" el workerpost)
+
+
+
+  JSON: {
+          "wp_title": "Titulo",
+          "wp_description": "Description",
+          "wp_photo": ["link1", "link2"],
+          "usr_id": "id de usuario que hizo el post"
+        }
+
+````
+
+### Relacionar workerpost con oficio
+
+````
+RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
+
 ### Notificaciones push
 
 ````
@@ -151,5 +188,6 @@ BODY: {
   title: "Something",
   message: "Something else",
 }
+
 
 ````
