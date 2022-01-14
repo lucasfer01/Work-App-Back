@@ -1,7 +1,7 @@
 // User model
 const { User } = require('../database/db');
 // Post model
-const { Post, Job } = require('../database/db');
+const { Post, Job, WorkerPost } = require('../database/db');
 
 
 // Crear usuario
@@ -39,7 +39,22 @@ const showUsers = (req, res, next) => {
         where: {
             usr_isActive: true
         },
-        include: [Job,Post]
+        include: [{
+            model: Job,
+            where: {
+                job_isActive: true
+            }
+        }, {
+            model: Post,
+            where: {
+                post_isActive: true
+            }
+        }, {
+            model: WorkerPost,
+            where: {
+                wp_isActive: true
+            }
+        }]
     })
         .then(response => {
             // Retornamos los usuarios encontrados
@@ -57,7 +72,22 @@ const showUserById = (req, res, next) => {
 
     // Buscamos el usuario por id
     User.findByPk(userId, {
-        include: [Job,Post]
+        include: [{
+            model: Job,
+            where: {
+                job_isActive: true
+            }
+        }, {
+            model: Post,
+            where: {
+                post_isActive: true
+            }
+        }, {
+            model: WorkerPost,
+            where: {
+                wp_isActive: true
+            }
+        }]
     })
         .then(user => res.json(user))
         .catch(error => next(error));
@@ -72,23 +102,23 @@ const modifyUser = (req, res, next) => {
 
     // Buscamos el usuario por el id
     User.findByPk(userId)
-    .then(user => {
-        return user.update({ // Actualizamos el usuario con la data recibida por body
-            ...dataUser
+        .then(user => {
+            return user.update({ // Actualizamos el usuario con la data recibida por body
+                ...dataUser
+            })
         })
-    })
-    .then(userUpdate => res.json(userUpdate)) // Mostramos le usuario actualizado
-    .catch(error => next(error));
+        .then(userUpdate => res.json(userUpdate)) // Mostramos le usuario actualizado
+        .catch(error => next(error));
 }
 
 // Eliminar usuarios
-const deleteUser = (req,res,next) => {
+const deleteUser = (req, res, next) => {
     // userId req.params
     const { userId } = req.params;
 
     // Buscamos el usuario
     User.findByPk(userId)
-        .then(user => user.update({usr_isActive: !user.usr_isActive})) // Cambiamos usr_isActive
+        .then(user => user.update({ usr_isActive: !user.usr_isActive })) // Cambiamos usr_isActive
         .then(response => res.sendStatus(200))
         .catch(error => next(error));
 }

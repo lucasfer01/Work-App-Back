@@ -138,3 +138,31 @@ Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
 
 los demas datos se pueden inventar, tales como dni y mail
 ````
+
+### WorkerPost
+
+````
+RUTA: http://localhost:3000/workerPost
+
+SUBRUTAS:
+  POST: 
+    '/' (Crear workerPost)
+
+  GET: 
+    '/user/:userId' (Trae todos los workerpost del usuario)
+
+    '/:workerpostId' (Trae workerpost por id) 
+
+  PUT:
+    '/:workerpostId' (Actualizar datos de workerpost)
+
+  DELETE:
+    '/:workerpostId' ("Elimina" el workerpost)
+
+````
+
+### Relacionar workerpost con oficio
+
+````
+RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
+````

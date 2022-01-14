@@ -11,11 +11,12 @@ const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 const subscriptionRoutes = require('./routes/subscription.routes');
 const newMessageRoutes = require('./routes/newMessage.routes');
-const {userJobRoutes} = require('./routes/user_job.routes');
-const {postRouter} = require('./routes/post.routes');
-const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
+const { userJobRoutes } = require('./routes/user_job.routes');
+const { postRouter } = require('./routes/post.routes');
 const { chatRouter } = require('./routes/chat.routes');
 const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
+const { workerPostRoutes } = require('./routes/workerPost.routes');
+const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 
 // Static content
 app.use(express.static(path.join(__dirname, '/public')));
@@ -47,16 +48,19 @@ app.use('/job', jobRoutes); // Rutas Trabajos
 
 app.use('/user-job', userJobRoutes); // Ruta agregar oficio a usuario
 
-app.use('/post', postRouter); // Ruta agregar post
+app.use('/workerpost-job', workerpostJobRouter);
 
-app.use('/authUser', authUserRoutes); // Autentificar usuarios
+app.use('/post', postRouter); // Ruta agregar post
 
 app.use('/subscription', subscriptionRoutes); // Suscribirse a notificaciones
 
 app.use('/new-message', newMessageRoutes); // Suscribirse a notificaciones
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
- 
+
+app.use('/workerPost', workerPostRoutes); // workerpost
+
+
 // Server
 app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);

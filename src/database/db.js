@@ -6,7 +6,8 @@ const config = require('../config');
 const modelsDefiners = {
     user: require('../models/user'),
     job: require('../models/job'),
-    post: require('../models/post')
+    post: require('../models/post'),
+    workerPost: require('../models/workerPost')
 }
 
 // PostgreSQL
@@ -23,7 +24,7 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const {User, Job, Post} = sequelize.models;
+const {User, Job, Post, WorkerPost} = sequelize.models;
 
 // Relaciones
 User.belongsToMany(Job, {through: 'User_Job'}); // user-job
@@ -31,6 +32,12 @@ Job.belongsToMany(User, {through: 'User_Job'}); // user-job
 
 User.hasMany(Post, {foreignKey: 'usr_id'}); // user-post
 Post.belongsTo(User); // user-post
+
+WorkerPost.belongsToMany(Job, {through: 'WorkerPost_Job'}); // WorkerPost-Job
+Job.belongsToMany(WorkerPost, {through: 'WorkerPost_Job'}); // WorkerPost-Job
+
+User.hasMany(WorkerPost, {foreignKey: 'usr_id'}); // User-workerpost
+WorkerPost.belongsTo(User); // User-Workerpost
 
 module.exports = {
     ...sequelize.models,
