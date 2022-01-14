@@ -22,6 +22,9 @@ Crear archivo `.env` y crear las variables de entorno
   POSTGRES_USER=postgres
   POSTGRES_PASSWORD= aca va tu contraseña
   POSTGRES_DB_NAME=work_app
+
+  PUBLIC_VAPID_KEY=BIGOGlUA89Jmop6cxKKXBw26LSl679plMCPJ6oDykA5Ik6KlM90sBZcxy80tkPq5HIYd-55vc-M-3Xs1my8SgX4
+  PRIVATE_VAPID_KEY=cAIh586rrv7DJm7IMefhlkUMoU4WhZQKW5yUzcUllrg
 ```
 
 Levantar el servidor
@@ -139,6 +142,7 @@ Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
 los demas datos se pueden inventar, tales como dni y mail
 ````
 
+
 ### WorkerPost
 
 ````
@@ -174,4 +178,16 @@ SUBRUTAS:
 
 ````
 RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
+
+### Notificaciones push
+
+````
+ENVIAR NOTIFICACIÓN: 
+POST: http://localhost:3000/new-message
+BODY: {
+  title: "Something",
+  message: "Something else",
+}
+
+
 ````
