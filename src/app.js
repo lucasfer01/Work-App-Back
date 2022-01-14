@@ -1,18 +1,24 @@
 // Express
 const express = require('express');
 const app = express();
+// http server
+const { createServer } = require('http');
+const httpServer = createServer(app);
+
+// path
 const path = require('path');
 // Enviroment
 const config = require('./config');
 // Web-push
 const webpush = require("./webpush/webpush.js");
+
 // Rutas
 const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 const subscriptionRoutes = require('./routes/subscription.routes');
 const newMessageRoutes = require('./routes/newMessage.routes');
-const {userJobRoutes} = require('./routes/user_job.routes');
-const {postRouter} = require('./routes/post.routes');
+const { userJobRoutes } = require('./routes/user_job.routes');
+const { postRouter } = require('./routes/post.routes');
 const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
 const { chatRouter } = require('./routes/chat.routes');
 const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
@@ -39,7 +45,7 @@ app.get('/', (req, res) => {
     res.send('Hola funciona home');
 });
 
-app.use('/', chatRouter); // Ruta Chat
+//app.use('/', chatRouter); // Ruta Chat
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
@@ -56,9 +62,9 @@ app.use('/subscription', subscriptionRoutes); // Suscribirse a notificaciones
 app.use('/new-message', newMessageRoutes); // Suscribirse a notificaciones
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
- 
+
 // Server
-app.listen(config.PORT, () => {
+const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
@@ -69,3 +75,32 @@ app.listen(config.PORT, () => {
             console.log(error);
         });
 });
+
+// Socket.io
+const socketIO = require('socket.io');
+const io = socketIO(server, {
+    cors: {
+        origin: ["http://localhost:3000", "http://localhost:3001"],
+    }
+});
+
+
+
+// websockets
+io.on('connection', (socket) => {
+    console.log('a user connected', socket.id);
+    //Escuchando un nuevo mensaje enviado por el cliente
+    socket.on("message", (data) => {
+        console.log(data);
+        //Enviando el mensaje a todos los clientes conectados
+        io.sockets.emit("message", data);
+    });
+    //Escuchando un usuario que se desconecta
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+})
+
+
+
+
