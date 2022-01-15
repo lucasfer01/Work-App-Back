@@ -25,6 +25,9 @@ const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
 
+// Controllers
+const { cargarOficios } = require('./controllers/app.controller');
+
 // Static content
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -75,9 +78,11 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
+            // Cargamos oficios
+            cargarOficios();
         }).catch(error => {
             console.log(error);
         });
