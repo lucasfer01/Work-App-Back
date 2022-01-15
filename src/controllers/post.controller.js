@@ -1,5 +1,5 @@
 // Post model
-const { Post } = require('../database/db');
+const { Post, Job } = require('../database/db');
 
 // Crea un post
 const createPost = (req, res, next) => {
@@ -19,7 +19,11 @@ const createPost = (req, res, next) => {
 // Mostrar todos los post
 const showPosts = (req, res, next) => {
     // Buscamos todos los posts
-    Post.findAll()
+    Post.findAll({
+        where: {
+            post_isActive: true
+        }
+    })
         .then(posts => res.json(posts)) // Retornamos todos los post encontrados
         .catch(error => next(error));
 }
@@ -30,7 +34,18 @@ const showPostById = (req, res, next) => {
     const { postId } = req.params;
 
     // Buscamos el post
-    Post.findByPk(postId)
+    Post.findOne({
+        where: {
+            post_id: postId
+        },
+        include: [{
+            required: false,
+            model: Job,
+            where: {
+                job_isActive: true
+            }
+        }]
+    })
         .then(post => res.json(post)) // Retornamos el post encontrado
         .catch(error => next(error));
 }
@@ -52,13 +67,13 @@ const modifyPost = (req, res, next) => {
 }
 
 // Delete post
-const deletePost = (req,res,next) => {
+const deletePost = (req, res, next) => {
     // postId de url
     const { postId } = req.params;
-    
+
     // Buscamos el post en la bbdd
     Post.findByPk(postId)
-        .then(post => post.destroy())
+        .then(post => post.update({ post_isActive: !post.post_isActive }))
         .then(response => res.sendStatus(200))
         .catch(error => next(error));
 }

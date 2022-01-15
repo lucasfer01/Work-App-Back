@@ -22,6 +22,14 @@ Crear archivo `.env` y crear las variables de entorno
   POSTGRES_USER=postgres
   POSTGRES_PASSWORD= aca va tu contraseña
   POSTGRES_DB_NAME=work_app
+
+  MP_PUBLIC_KEY='TEST-c89f6107-933c-448b-85a0-8d16c06d11bf'
+  MP_ACCESS_TOKEN='TEST-6732755547074714-011214-d9dded86854d62687fb0b0a53f66a40e-272180329'
+  MP_SUCCESS_URL='http://localhost:3001/home'
+  MP_FAILURE_URL='http://localhost:3001/home'
+
+  PUBLIC_VAPID_KEY=BIGOGlUA89Jmop6cxKKXBw26LSl679plMCPJ6oDykA5Ik6KlM90sBZcxy80tkPq5HIYd-55vc-M-3Xs1my8SgX4
+  PRIVATE_VAPID_KEY=cAIh586rrv7DJm7IMefhlkUMoU4WhZQKW5yUzcUllrg
 ```
 
 Levantar el servidor
@@ -51,8 +59,31 @@ SUBRUTAS:
     '/:userId' (Modificar usuario)
 
   Delete:
-    '/:userId' (Eliminar usuario)  
+    '/:userId' (Eliminar usuario) 
+
+
+  JSON:
+    {
+      "usr_username": "Lucasfer01",
+      "usr_email": "mail@gmail.com",
+      "usr_id": "a2",
+      "usr_photo": ["Link 1", "Link 2", "Link 3"],
+      "usr_role": "user",
+      "usr_description": "Descripcion del perfil",
+      "usr_location": {latitud, longitud},
+      "usr_score": 5
+    }
 ````
+
+RESPUESTA: 
+
+  <br/>
+
+  <img src='./media/readme/user/user-json-response1.jpeg' height='300px'/>
+
+  <br/>
+
+  <img src='./media/readme/user/user-json-response2.jpeg' height='300px'/>
 
 ### Oficios
 
@@ -65,6 +96,8 @@ SUBRUTAS:
 
     '/:jobId' (Buscar oficio por id y mostrarlo)
 
+    '/job?jobName=NombreDelOficio'
+
   Post:
     '/' (Crear oficio)
 
@@ -73,7 +106,18 @@ SUBRUTAS:
 
   Delete:
     '/:jobId' (Eliminar oficio)
+
+
+  JSON:
+    {
+      "job_name": "fullstack developer",
+      "job_description": "Descripcion de fullstack developer"
+    }
 ````
+
+RESPUESTA:
+
+<img src='./media/readme/job/job-json-response.jpeg'/>
 
 ### Conectar oficio con usuario
 
@@ -104,4 +148,112 @@ SUBRUTAS:
 
   Delete:
     '/:postId' (Eliminar post)
+
+
+  JSON:
+    {
+      "post_title": "FullStack Developer",
+      "post_description": "Frontend and Backend Developer",
+      "post_shortdescription": "Descripcion corta",
+      "post_photo": ["Link 1", "Link 2"],
+      "post_priority": "Urgente",
+      "post_fee": 140,
+      "usr_id": "id de usuario que hace el post"
+    }
+````
+
+RESPUESTA:
+<img src='./media/readme/post/post-json-response.jpeg'/>
+
+### Relacion post con oficio
+
+````
+RUTA: 'http://localhost:3000'
+
+SUBRUTAS:
+  POST:
+    '/:workerPostId/:jobId' (Relacionar post con oficio)
+````
+
+### Mercadopago
+
+````
+POST: http://localhost:3000/checkout
+
+ENVIAR -->   JSON: {
+                    "title": "Dummy Title",   <-- OBLIGATORIO
+                    "description": "Dummy description",    <-- OBLIGATORIO
+                    "picture_url": "http://www.myapp.com/myimage.jpg",
+                    "category_id": "cat123",
+                    "quantity": 1,    <-- OBLIGATORIO
+                    "unit_price": 10    <-- OBLIGATORIO
+                  }
+
+<-- DEVUELVE
+    RESULTADO: Devuelve un objeto con informacion de la operacion, pero lo que importa es el campo "init_point", el cual es un link que lleva a la pagina para completar el pago
+
+
+Credencial de prueba
+
+Numero de tarjeta: 5031 7557 3453 0604
+
+Vencimeinto: 11/25
+
+codigo de seguridad: 123
+
+Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
+
+los demas datos se pueden inventar, tales como dni y mail
+````
+
+
+### WorkerPost
+
+````
+RUTA: http://localhost:3000/workerPost
+
+SUBRUTAS:
+  POST: 
+    '/' (Crear workerPost)
+
+  GET: 
+    '/user/:userId' (Trae todos los workerpost del usuario)
+
+    '/:workerpostId' (Trae workerpost por id) 
+
+  PUT:
+    '/:workerpostId' (Actualizar datos de workerpost)
+
+  DELETE:
+    '/:workerpostId' ("Elimina" el workerpost)
+
+
+
+  JSON: {
+          "wp_title": "Titulo",
+          "wp_description": "Description",
+          "wp_photo": ["link1", "link2"],
+          "usr_id": "id de usuario que hizo el post"
+        }
+
+````
+
+RESPUESTA:
+  <img src='./media/readme/workerpost/workerpost-json-response.jpeg' />
+
+### Relacionar workerpost con oficio
+
+````
+RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
+
+````
+### Notificaciones push
+
+````
+ENVIAR NOTIFICACIÓN: 
+POST: http://localhost:3000/push-notification
+BODY: {
+  title: "Something",
+  message: "Something else",
+}
 ````

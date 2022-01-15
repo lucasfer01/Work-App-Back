@@ -1,5 +1,5 @@
 // Job model
-const { Job } = require('../database/db');
+const { Job, User } = require('../database/db');
 
 // Create job
 const createJob = (req, res, next) => {
@@ -35,7 +35,18 @@ const createJob = (req, res, next) => {
 // Mostrar los trabajos
 const showJobs = (req, res,next) => {
     // Buscamos todos los usuarios
-    Job.findAll()
+    Job.findAll({
+        where: {
+            job_isActive: true
+        },
+        include: [{
+            required: false,
+            model: User,
+            where: {
+                usr_isActive: true
+            }
+        }]
+    })
         .then(response => {
             // Retornamos todos los usuarios encotrados
             return res.status(200).json(response);
@@ -51,9 +62,42 @@ const showJobById = (req,res,next) => {
     const { jobId } = req.params;
 
     // Buscamos el trabajo
-    Job.findByPk(jobId)
+    Job.findOne({
+        where: {
+            job_id: jobId
+        },
+        include: [{
+            required: false,
+            model: User,
+            where: {
+                usr_isActive: true
+            }
+        }]
+    })
         .then(job => res.json(job)) // Mostramos el trabjao encontrado
         .catch(error => next(error));
+}
+
+// Mostrar trabajo por nombre
+const showJobByName = (req,res,next) => {
+    // jobName por query
+    const { jobName } = req.query;
+
+    // Buscamos el oficio por nombre
+    Job.findOne({
+        where: {
+            job_name: jobName
+        },
+        include: [{
+            required: false,
+            model: User,
+            where: {
+                usr_isActive: true
+            }
+        }]
+    })
+    .then(job => res.json(job))
+    .catch(error => next(error));
 }
 
 // Actualizar trabajo
@@ -79,7 +123,7 @@ const deleteJob = (req,res,next) => {
 
     // Buscamos el trabajo por id
     Job.findByPk(jobId)
-        .then(job => job.destroy()) // Eliminamos le trabajo
+        .then(job => job.update({job_isActive: !job.job_isActive})) // Cambiamos el valor de isActive
         .then(response => res.sendStatus(200)) // Si todo sale bien enviamos un status 200
         .catch(error => next(error));
 }
@@ -90,5 +134,6 @@ module.exports = {
     showJobs,
     showJobById,
     modifyJob,
-    deleteJob
+    deleteJob,
+    showJobByName
 }
