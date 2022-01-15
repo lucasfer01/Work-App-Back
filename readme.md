@@ -146,7 +146,7 @@ los demas datos se pueden inventar, tales como dni y mail
 
 ````
 ENVIAR NOTIFICACIÓN: 
-POST: http://localhost:3000/new-message
+POST: http://localhost:3000/push-notification
 BODY: {
   title: "Something",
   message: "Something else",
