@@ -23,6 +23,11 @@ Crear archivo `.env` y crear las variables de entorno
   POSTGRES_PASSWORD= aca va tu contraseña
   POSTGRES_DB_NAME=work_app
 
+  MP_PUBLIC_KEY='TEST-c89f6107-933c-448b-85a0-8d16c06d11bf'
+  MP_ACCESS_TOKEN='TEST-6732755547074714-011214-d9dded86854d62687fb0b0a53f66a40e-272180329'
+  MP_SUCCESS_URL='http://localhost:3001/home'
+  MP_FAILURE_URL='http://localhost:3001/home'
+
   PUBLIC_VAPID_KEY=BIGOGlUA89Jmop6cxKKXBw26LSl679plMCPJ6oDykA5Ik6KlM90sBZcxy80tkPq5HIYd-55vc-M-3Xs1my8SgX4
   PRIVATE_VAPID_KEY=cAIh586rrv7DJm7IMefhlkUMoU4WhZQKW5yUzcUllrg
 ```
@@ -54,7 +59,21 @@ SUBRUTAS:
     '/:userId' (Modificar usuario)
 
   Delete:
-    '/:userId' (Eliminar usuario)  
+    '/:userId' (Eliminar usuario) 
+
+
+  JSON:
+    {
+      "usr_username": "Lucasfer01",
+      "usr_email": "mail@gmail.com",
+      "usr_id": "a2",
+      "usr_photo": ["Link 1", "Link 2", "Link 3"],
+      "usr_role": "user",
+      "usr_description": "Descripcion del perfil",
+      "usr_location": {latitud, longitud},
+      "usr_score": 5
+    }
+ 
 ````
 
 ### Oficios
@@ -78,6 +97,13 @@ SUBRUTAS:
 
   Delete:
     '/:jobId' (Eliminar oficio)
+
+
+  JSON:
+    {
+      "job_name": "fullstack developer",
+      "job_description": "Descripcion de fullstack developer"
+    }
 ````
 
 ### Conectar oficio con usuario
@@ -109,6 +135,28 @@ SUBRUTAS:
 
   Delete:
     '/:postId' (Eliminar post)
+
+
+  JSON:
+    {
+      "post_title": "FullStack Developer",
+      "post_description": "Frontend and Backend Developer",
+      "post_shortdescription": "Descripcion corta",
+      "post_photo": ["Link 1", "Link 2"],
+      "post_priority": "Urgente",
+      "post_fee": 140,
+      "usr_id": "id de usuario que hace el post"
+    }
+````
+
+### Relacion post con oficio
+
+````
+RUTA: 'http://localhost:3000'
+
+SUBRUTAS:
+  POST:
+    '/:workerPostId/:jobId' (Relacionar post con oficio)
 ````
 
 ### Mercadopago
@@ -142,6 +190,43 @@ Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
 los demas datos se pueden inventar, tales como dni y mail
 ````
 
+
+### WorkerPost
+
+````
+RUTA: http://localhost:3000/workerPost
+
+SUBRUTAS:
+  POST: 
+    '/' (Crear workerPost)
+
+  GET: 
+    '/user/:userId' (Trae todos los workerpost del usuario)
+
+    '/:workerpostId' (Trae workerpost por id) 
+
+  PUT:
+    '/:workerpostId' (Actualizar datos de workerpost)
+
+  DELETE:
+    '/:workerpostId' ("Elimina" el workerpost)
+
+
+
+  JSON: {
+          "wp_title": "Titulo",
+          "wp_description": "Description",
+          "wp_photo": ["link1", "link2"],
+          "usr_id": "id de usuario que hizo el post"
+        }
+
+````
+
+### Relacionar workerpost con oficio
+
+````
+RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
+
 ### Notificaciones push
 
 ````
@@ -151,5 +236,6 @@ BODY: {
   title: "Something",
   message: "Something else",
 }
+
 
 ````

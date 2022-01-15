@@ -39,7 +39,13 @@ const showJobs = (req, res,next) => {
         where: {
             job_isActive: true
         },
-        include: [User]
+        include: [{
+            required: false,
+            model: User,
+            where: {
+                usr_isActive: true
+            }
+        }]
     })
         .then(response => {
             // Retornamos todos los usuarios encotrados
@@ -56,7 +62,18 @@ const showJobById = (req,res,next) => {
     const { jobId } = req.params;
 
     // Buscamos el trabajo
-    Job.findByPk(jobId)
+    Job.findOne({
+        where: {
+            job_id: jobId
+        },
+        include: [{
+            required: false,
+            model: User,
+            where: {
+                usr_isActive: true
+            }
+        }]
+    })
         .then(job => res.json(job)) // Mostramos el trabjao encontrado
         .catch(error => next(error));
 }
@@ -71,7 +88,13 @@ const showJobByName = (req,res,next) => {
         where: {
             job_name: jobName
         },
-        include: [User]
+        include: [{
+            required: false,
+            model: User,
+            where: {
+                usr_isActive: true
+            }
+        }]
     })
     .then(job => res.json(job))
     .catch(error => next(error));
