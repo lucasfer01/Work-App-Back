@@ -16,7 +16,7 @@ const webpush = require("./webpush/webpush.js");
 const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 const subscriptionRoutes = require('./routes/subscription.routes');
-const newMessageRoutes = require('./routes/newMessage.routes');
+const pushNotificationRoutes = require('./routes/pushNotification.routes');
 const { userJobRoutes } = require('./routes/user_job.routes');
 const { postRouter } = require('./routes/post.routes');
 const { chatRouter } = require('./routes/chat.routes');
@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
     res.send('Hola funciona home');
 });
 
-//app.use('/', chatRouter); // Ruta Chat
+app.use('/', chatRouter); // Ruta Chat
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
@@ -63,7 +63,7 @@ app.use('/post', postRouter); // Ruta agregar post
 
 app.use('/subscription', subscriptionRoutes); // Suscribirse a notificaciones
 
-app.use('/new-message', newMessageRoutes); // Suscribirse a notificaciones
+app.use('/push-notification', pushNotificationRoutes); // Suscribirse a notificaciones
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
 
@@ -95,12 +95,20 @@ const io = socketIO(server, {
 
 // websockets
 io.on('connection', (socket) => {
-    console.log('a user connected', socket.id);
+    console.log('a user connected', socket.id); 
+    //Establecemos una room para el socket
+    let room;
+    socket.on("join", (data) => {
+        console.log(data.room);
+        socket.join(data.room);
+        room = data.room;
+        console.log(`Usuario ${socket.id} se ha unido a la sala ${data.room}`);
+    });
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
         console.log(data);
         //Enviando el mensaje a todos los clientes conectados
-        io.sockets.emit("message", data);
+        socket.to(room).emit("message", data);
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {

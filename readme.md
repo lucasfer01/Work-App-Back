@@ -231,7 +231,7 @@ RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
 
 ````
 ENVIAR NOTIFICACIÓN: 
-POST: http://localhost:3000/new-message
+POST: http://localhost:3000/push-notification
 BODY: {
   title: "Something",
   message: "Something else",

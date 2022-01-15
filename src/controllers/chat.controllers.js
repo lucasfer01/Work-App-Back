@@ -43,7 +43,7 @@ bot.hashtag('programando', ctx => {
     ctx.reply('este es un hashtag.');
 });
 //Inicia el bot
-bot.launch();
+//bot.launch();
 
 const chat = (req, res) => {
     res.send("Holaa") 

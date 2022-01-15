@@ -6,7 +6,7 @@ const subscribe = async (req, res, next) => {
     res.status(200).json();
 }
 
-const newMessage = async (req, res, next) => {
+const pushNotification = async (req, res, next) => {
     const {title, message} = req.body;
 
     const payload = JSON.stringify({
@@ -16,6 +16,7 @@ const newMessage = async (req, res, next) => {
 
     try {
         await webpush.sendNotification(pushSubscription, payload);
+        res.status(200).json({msg: 'Notification sent'});
     } catch (error) {
         next(error);
     }
@@ -23,5 +24,5 @@ const newMessage = async (req, res, next) => {
 
 module.exports = {
     subscribe,
-    newMessage,
+    pushNotification,
 };
