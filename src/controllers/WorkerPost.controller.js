@@ -27,7 +27,14 @@ const showUserWorkerPost = (req, res, next) => {
         where: {
             usr_id: userId,
             wp_isActive: true
-        }
+        },
+        include: [{
+            required: false,
+            model: Job,
+            where: {
+                job_isActive: true
+            }
+        }]
     })
         .then(posts => {
             // Retornamos los posts en json
