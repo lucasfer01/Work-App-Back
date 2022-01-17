@@ -113,7 +113,7 @@ io.on('connection', (socket) => {
     socket.on("message", (data) => {
         console.log(data);
         //Enviando el mensaje a todos los clientes conectados
-        socket.to(room).emit("message", data);
+        socket.broadcast.emit("message", data);
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
