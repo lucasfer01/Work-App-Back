@@ -15,15 +15,18 @@ const webpush = require("./webpush/webpush.js");
 // Rutas
 const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
-const subscriptionRoutes = require('./routes/subscription.routes');
-const newMessageRoutes = require('./routes/newMessage.routes');
+const subscriptionRoutes = require('./routes/subscription.routes')
 const {userJobRoutes} = require('./routes/user_job.routes');
 const {postRouter} = require('./routes/post.routes');
-const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
+const pushNotificationRoutes = require('./routes/pushNotification.routes');
+const { userJobRoutes } = require('./routes/user_job.routes');
+const { postRouter } = require('./routes/post.routes');
 const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
-const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
+
+// Controllers
+const { cargarOficios } = require('./controllers/app.controller');
 
 // Static content
 app.use(express.static(path.join(__dirname, '/public')));
@@ -62,7 +65,7 @@ app.use('/post', postRouter); // Ruta agregar post
 
 app.use('/subscription', subscriptionRoutes); // Suscribirse a notificaciones
 
-app.use('/new-message', newMessageRoutes); // Suscribirse a notificaciones
+app.use('/push-notification', pushNotificationRoutes); // Suscribirse a notificaciones
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
 
@@ -77,11 +80,44 @@ const server = app.listen(config.PORT, () => {
     sequelize.sync({ force: true })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
+            // Cargamos oficios
+            cargarOficios();
         }).catch(error => {
             console.log(error);
         });
 });
 
+// Socket.io
+const socketIO = require('socket.io');
+const io = socketIO(server, {
+    cors: {
+        origin: ["http://localhost:3000", "http://localhost:3001"],
+    }
+});
+
+// Almacenar sockets de usuarios conectados
+let connectedUsers = {};
+
+// websockets
+io.on('connection', (socket) => {
+    console.log('a user connected', socket.id); 
+    //Guardamos el socket en el objeto de usuarios conectados
+    socket.on("register", (data) => {
+        console.log(data);
+        connectedUsers[data] = socket.id;
+        console.log(connectedUsers);
+    });
+    //Escuchando un nuevo mensaje enviado por el cliente
+    socket.on("message", (data) => {
+        console.log(data);
+        //Enviando el mensaje al receptor
+        socket.to(connectedUsers[data.receiver]).emit("message", data);
+    });
+    //Escuchando un usuario que se desconecta
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+})
 
 
 

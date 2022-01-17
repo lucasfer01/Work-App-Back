@@ -73,8 +73,17 @@ SUBRUTAS:
       "usr_location": {latitud, longitud},
       "usr_score": 5
     }
- 
 ````
+
+RESPUESTA: 
+
+  <br/>
+
+  <img src='./media/readme/user/user-json-response1.jpeg' height='300px'/>
+
+  <br/>
+
+  <img src='./media/readme/user/user-json-response2.jpeg' height='300px'/>
 
 ### Oficios
 
@@ -105,6 +114,10 @@ SUBRUTAS:
       "job_description": "Descripcion de fullstack developer"
     }
 ````
+
+RESPUESTA:
+
+<img src='./media/readme/job/job-json-response.jpeg'/>
 
 ### Conectar oficio con usuario
 
@@ -148,6 +161,9 @@ SUBRUTAS:
       "usr_id": "id de usuario que hace el post"
     }
 ````
+
+RESPUESTA:
+<img src='./media/readme/post/post-json-response.jpeg'/>
 
 ### Relacion post con oficio
 
@@ -222,20 +238,22 @@ SUBRUTAS:
 
 ````
 
+RESPUESTA:
+  <img src='./media/readme/workerpost/workerpost-json-response.jpeg' />
+
 ### Relacionar workerpost con oficio
 
 ````
 RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
 
+````
 ### Notificaciones push
 
 ````
 ENVIAR NOTIFICACIÓN: 
-POST: http://localhost:3000/new-message
+POST: http://localhost:3000/push-notification
 BODY: {
   title: "Something",
   message: "Something else",
 }
-
-
 ````
