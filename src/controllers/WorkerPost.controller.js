@@ -27,7 +27,23 @@ const showUserWorkerPost = (req, res, next) => {
         where: {
             usr_id: userId,
             wp_isActive: true
-        }
+        },
+        attributes: {
+            exclude: ['userUsrId']
+        },
+        include: [{
+            required: false,
+            model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
+            where: {
+                job_isActive: true
+            }
+        }]
     })
         .then(posts => {
             // Retornamos los posts en json
@@ -46,9 +62,18 @@ const showWorkerPostById = (req, res, next) => {
         where: {
             wp_id: workerPostId
         },
+        attributes: {
+            exclude: ['userUsrId']
+        },
         include: [{
             required: false,
             model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
             where: {
                 job_isActive: true
             }
