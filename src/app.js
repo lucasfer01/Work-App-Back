@@ -92,7 +92,7 @@ const server = app.listen(config.PORT, () => {
 const socketIO = require('socket.io');
 const io = socketIO(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://localhost:3001"],
+        origin: ["http://localhost:3000", "http://localhost:3001", "https://workapp-back-end.herokuapp.com/", "https://work-app-front.vercel.app/"],
     }
 });
 
