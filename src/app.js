@@ -96,24 +96,23 @@ const io = socketIO(server, {
     }
 });
 
-
+// Almacenar sockets de usuarios conectados
+let connectedUsers = {};
 
 // websockets
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id); 
-    //Establecemos una room para el socket
-    let room;
-    socket.on("join", (data) => {
-        console.log(data.room);
-        socket.join(data.room);
-        room = data.room;
-        console.log(`Usuario ${socket.id} se ha unido a la sala ${data.room}`);
+    //Guardamos el socket en el objeto de usuarios conectados
+    socket.on("register", (data) => {
+        console.log(data);
+        connectedUsers[data] = socket.id;
+        console.log(connectedUsers);
     });
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
         console.log(data);
-        //Enviando el mensaje a todos los clientes conectados
-        socket.to(room).emit("message", data);
+        //Enviando el mensaje al receptor
+        socket.to(connectedUsers[data.receiver]).emit("message", data);
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
