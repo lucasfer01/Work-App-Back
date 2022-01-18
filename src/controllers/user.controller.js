@@ -41,6 +41,12 @@ const showUsers = (req, res, next) => {
         include: [{
             required: false,
             model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
             where: {
                 job_isActive: true
             }
@@ -49,12 +55,18 @@ const showUsers = (req, res, next) => {
             model: Post,
             where: {
                 post_isActive: true
+            },
+            attributes: {
+                exclude: ['userUsrId','usr_id']
             }
         }, {
             required: false,
             model: WorkerPost,
             where: {
                 wp_isActive: true
+            },
+            attributes: {
+                exclude: ['userUsrId', 'usr_id']
             }
         }]
     })
@@ -82,18 +94,30 @@ const showUserById = (req, res, next) => {
             model: Job,
             where: {
                 job_isActive: true
+            },
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
             }
         }, {
             required: false,
             model: Post,
             where: {
                 post_isActive: true
+            },
+            attributes: {
+                exclude: ['userUsrId','usr_id']
             }
         }, {
             required: false,
             model: WorkerPost,
             where: {
                 wp_isActive: true
+            },
+            attributes: {
+                exclude: ['userUsrId','usr_id']
             }
         }]
     })
