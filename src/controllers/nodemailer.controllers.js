@@ -53,7 +53,7 @@ const enviarMail = async (req, res) => {
 
     sendMail()
       .then((res) => {
-        res.status(200).send("enviado");
+        res.status(200).send("Enviado");
       })
       .catch((error) => console.log(error.message));
     }
