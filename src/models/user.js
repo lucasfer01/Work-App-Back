@@ -41,6 +41,21 @@ module.exports = (sequelize) => {
         usr_isActive: {
             type: DataTypes.BOOLEAN,
             defaultValue:  true
+        },
+        usr_social:{
+            type: DataTypes.JSON // instagram, facebook, github, linkedin
+        },
+        usr_phone: {
+            type: DataTypes.STRING
+        },
+        usr_country: {
+            type: DataTypes.STRING
+        },
+        usr_gender: {
+            type: DataTypes.STRING
+        },
+        usr_charge:{
+            type: DataTypes.STRING
         }
     });
 }

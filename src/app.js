@@ -28,6 +28,7 @@ const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
 const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
+const { emailPost } = require('./routes/nodemailer.routes.js');
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
@@ -55,6 +56,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', chatRouter); // Ruta Chat
+
+app.use('/', emailPost);
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
@@ -96,7 +99,7 @@ const server = app.listen(config.PORT, () => {
 const socketIO = require('socket.io');
 const io = socketIO(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://localhost:3001"],
+        origin: ["http://localhost:3000", "http://localhost:3001", "https://workapp-back-end.herokuapp.com/", "https://work-app-front.vercel.app/"],
     }
 });
 
