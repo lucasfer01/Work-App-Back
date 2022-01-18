@@ -16,14 +16,11 @@ const webpush = require("./webpush/webpush.js");
 const userRoutes = require('./routes/user.routes');
 const jobRoutes = require('./routes/job.routes');
 const subscriptionRoutes = require('./routes/subscription.routes');
-const newMessageRoutes = require('./routes/newMessage.routes');
 const {userJobRoutes} = require('./routes/user_job.routes');
 const {postRouter} = require('./routes/post.routes');
 const { authUserRoutes } = require('./routes/autenficarUsuario.routes');
 const pushNotificationRoutes = require('./routes/pushNotification.routes');
-const { userJobRoutes } = require('./routes/user_job.routes');
-const { postRouter } = require('./routes/post.routes');
-const { chatRouter } = require('./routes/chat.routes');
+// const { chatRouter } = require('./routes/chat.routes');
 const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
 const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
@@ -55,7 +52,7 @@ app.get('/', (req, res) => {
     res.send('Hola funciona home');
 });
 
-app.use('/', chatRouter); // Ruta Chat
+// app.use('/', chatRouter); // Ruta Chat
 
 app.use('/', emailPost);
 

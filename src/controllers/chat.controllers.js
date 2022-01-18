@@ -1,5 +1,5 @@
 //Servidor con express
-const express = require("express");
+/*const express = require("express");
 const http = require("http");
 const app = express();
 
@@ -11,7 +11,6 @@ const app = express();
   io.on("connection", (socket) => {
     let nombre;
 
-<<<<<<< HEAD
     socket.on("conectado", (nomb) => {
       nombre = nomb;
       //socket.broadcast.emit manda el mensaje a todos los clientes excepto al que ha enviado el mensaje
@@ -34,7 +33,6 @@ const app = express();
     });
   });
  
-=======
 bot.settings((ctx) => {
     ctx.reply('Configurar');
 });
@@ -46,10 +44,10 @@ bot.command(['mycommand', 'Mycommand', 'MyCommand', 'MYCOMMAND'], (ctx) => {
 bot.hears('computer', ctx => {
     ctx.reply('Hey, vendo computadoras');
 });
-/* Para cuando el ususario simplemente escriba.
-bot.on('text', ctx => {
-    ctx.reply('Estás escribiendo...');
-});*/
+//  Para cuando el ususario simplemente escriba.
+// bot.on('text', ctx => {
+//     ctx.reply('Estás escribiendo...');
+// });
 //Para reconocer los stickers.
 bot.on('sticker', ctx => {
     ctx.reply('Has enviado un sticker');
@@ -68,6 +66,5 @@ bot.hashtag('programando', ctx => {
 });
 //Inicia el bot
 //bot.launch();
->>>>>>> 95089d73534e85db04b5b26a6e6610a81e6e0c4b
-
+*/
 
