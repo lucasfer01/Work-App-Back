@@ -24,6 +24,7 @@ const { mercadopagoRoutes } = require('./routes/mercadopago.routes');
 const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
+const { emailPost } = require('./routes/nodemailer.routes.js');
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
@@ -51,6 +52,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', chatRouter); // Ruta Chat
+
+app.use('/', emailPost);
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
