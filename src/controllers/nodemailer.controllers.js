@@ -7,16 +7,16 @@ const { User } = require("../database/db")
 const enviarMail = async (req, res) => {
   
   const { CLIENT_ID, REFRESH_TOKEN, CLIENT_SECRET, REDIRECT_URI } = process.env;
-  const post  = req.body;
-  console.log("post", post);
-  const alerts = ["celador"];
+  const jobAlerts  = req.body;
+  console.log("post", jobAlerts);
+  const alerts = jobAlerts;
   const users = await User.findAll({
     where: {
       usr_alerts: alerts
     }
   });
   console.log("users", users);
-  const emails = users.map(user => user.usr_email);
+  const emails = users?.map(user => user.usr_email);
   console.log("emails", emails);
   
   

@@ -2,18 +2,22 @@
 const { Post, Job, User } = require('../database/db');
 
 // Crea un post
-const createPost = (req, res, next) => {
+const createPost = async (req, res, next) => {
     // Body Request
-    const dataPost = req.body;
+    const { post, jobs } = req.body;
 
+    const jobsDb = await Job.findAll({
+        where: {
+            job_name: jobs
+        }
+    });
     // Creamos el post
-    Post.create({
-        ...dataPost
+    const newPost = await Post.create({
+        ...post
     })
-        .then(post => {
-            return res.status(200).json(post);
-        })
-        .catch(error => next(error));
+    await newPost.addJobs(jobsDb);
+    // Retornamos el post creado
+    res.json(newPost);
 }
 
 // Mostrar todos los post
