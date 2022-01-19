@@ -4,9 +4,6 @@ const app = express();
 // http server
 const { createServer } = require('http');
 const httpServer = createServer(app);
-
-const axios = require('axios');
-
 // path
 const path = require('path');
 // Enviroment
