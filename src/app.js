@@ -25,6 +25,12 @@ const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
 const { emailPost } = require('./routes/nodemailer.routes.js');
+const {createChatAndAddMessage,
+    showChats,
+    showChatsByUser,
+    findChat,
+    deleteChat
+} = require('./routes/sockerChat.routes');
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');

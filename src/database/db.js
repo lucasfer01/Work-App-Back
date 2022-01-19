@@ -43,7 +43,7 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const {User, Job, Post, WorkerPost} = sequelize.models;
+const {User, Job, Post, WorkerPost, Chat} = sequelize.models;
 
 // Relaciones
 User.belongsToMany(Job, {through: 'User_Job'}); // user-job
@@ -60,6 +60,9 @@ WorkerPost.belongsTo(User); // User-Workerpost
 
 Post.belongsToMany(Job, {through: 'Post_Job'}); // Post-Job
 Job.belongsToMany(Post, {through: 'Post_Job'}); // Post-Job
+
+// User.belongsToMany(Chat, {through: 'User_Chat'}); // User-Chat
+// Chat.belongsToMany(User, {through: 'User_Chat'}); // User-Chat
 
 module.exports = {
     ...sequelize.models,
