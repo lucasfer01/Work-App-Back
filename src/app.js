@@ -115,13 +115,9 @@ io.on('connection', (socket) => {
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
         console.log(data);
-<<<<<<< HEAD
-        //Enviando el mensaje a todos los clientes conectados
-        socket.broadcast.emit("message", data);
-=======
+
         //Enviando el mensaje al receptor
         socket.to(connectedUsers[data.receiver]).emit("message", data);
->>>>>>> e6295024498acfe3b9c157089b78e3e165f69968
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
