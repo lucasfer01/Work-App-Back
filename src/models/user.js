@@ -59,6 +59,9 @@ module.exports = (sequelize) => {
         },
         usr_alerts: {
             type: DataTypes.ARRAY(DataTypes.STRING)
+        },
+        usr_banner:{
+            type: DataTypes.ARRAY(DataTypes.STRING)
         }
     });
 }
