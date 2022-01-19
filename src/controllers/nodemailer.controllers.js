@@ -19,6 +19,7 @@ const enviarMail = async (req, res) => {
   const emails = users.map(user => user.usr_email);
   console.log("emails", emails);
   
+  
 
   try {
       //voy a recibir el email por body para verificar si existe user.
