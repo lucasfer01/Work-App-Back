@@ -56,6 +56,9 @@ module.exports = (sequelize) => {
         },
         usr_charge:{
             type: DataTypes.STRING
+        },
+        usr_alerts: {
+            type: DataTypes.ARRAY(DataTypes.STRING)
         }
     });
 }
