@@ -4,7 +4,6 @@ const app = express();
 // http server
 const { createServer } = require('http');
 const httpServer = createServer(app);
-
 // path
 const path = require('path');
 // Enviroment
@@ -101,27 +100,46 @@ const io = socketIO(server, {
 });
 
 // Almacenar sockets de usuarios conectados
-let connectedUsers = {};
+let onlineUsers = {};
+
+const addUser = (userName, socketId) => {
+    onlineUsers[userName] = socketId;
+};
+
+const removeUser = (socketId) => {
+    Object.keys(onlineUsers).forEach(userName => {
+        if (onlineUsers[userName] === socketId) {
+            delete onlineUsers[userName];
+        }
+    });
+};
+
 
 // websockets
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id); 
     //Guardamos el socket en el objeto de usuarios conectados
     socket.on("register", (data) => {
-        console.log(data);
-        connectedUsers[data] = socket.id;
-        console.log(connectedUsers);
+        addUser(data, socket.id);
+        console.log(onlineUsers);
     });
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
         console.log(data);
-
         //Enviando el mensaje al receptor
-        socket.to(connectedUsers[data.receiver]).emit("message", data);
+        if(onlineUsers[data.receiver]){
+            io.to(onlineUsers[data.receiver]).emit("message", data);
+            //Enviando notificación al receptor
+            io.to(onlineUsers[data.receiver]).emit("notification", {
+                type: "message",
+                body: data,
+            });
+        }
     });
+    //Escuchando una nueva notificacion para un usuario especifico
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        removeUser(socket.id);
     });
 })
 
