@@ -5,6 +5,8 @@ const app = express();
 const { createServer } = require('http');
 const httpServer = createServer(app);
 
+const axios = require('axios');
+
 // path
 const path = require('path');
 // Enviroment
@@ -78,7 +80,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
@@ -122,14 +124,20 @@ io.on('connection', (socket) => {
     });
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
-        console.log(data);
         //Enviando el mensaje al receptor
-        socket.to(onlineUsers[data.receiver]).emit("message", data);
+        if(onlineUsers[data.receiver]){
+            io.to(onlineUsers[data.receiver]).emit("message", data);
+            //Enviando notificación al receptor
+            io.to(onlineUsers[data.receiver]).emit("notification", {
+                type: "message",
+                body: data,
+            });
+        }
     });
+    //Escuchando una nueva notificacion para un usuario especifico
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
         removeUser(socket.id);
-        console.log(onlineUsers);
     });
 })
 
