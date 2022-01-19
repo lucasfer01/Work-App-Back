@@ -125,6 +125,7 @@ io.on('connection', (socket) => {
     });
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
+        console.log(data);
         //Enviando el mensaje al receptor
         if(onlineUsers[data.receiver]){
             io.to(onlineUsers[data.receiver]).emit("message", data);
