@@ -102,10 +102,12 @@ const io = socketIO(server, {
 // Almacenar sockets de usuarios conectados
 let onlineUsers = {};
 
+// Aladir socket de usuario de usuario
 const addUser = (userName, socketId) => {
     onlineUsers[userName] = socketId;
 };
 
+// Eliminar socket de usuario
 const removeUser = (socketId) => {
     Object.keys(onlineUsers).forEach(userName => {
         if (onlineUsers[userName] === socketId) {
@@ -115,13 +117,14 @@ const removeUser = (socketId) => {
 };
 
 
+
+
 // websockets
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id); 
     //Guardamos el socket en el objeto de usuarios conectados
     socket.on("register", (data) => {
         addUser(data, socket.id);
-        console.log(onlineUsers);
     });
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
