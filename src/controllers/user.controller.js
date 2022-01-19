@@ -131,6 +131,7 @@ const modifyUser = (req, res, next) => {
     const { userId } = req.params;
     // Data a modificar
     const dataUser = req.body;
+    console.log("datauser", dataUser);
 
     // Buscamos el usuario por el id
     User.findByPk(userId)
