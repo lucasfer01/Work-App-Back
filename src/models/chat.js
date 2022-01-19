@@ -10,8 +10,5 @@ module.exports = (sequelize) => {
             primaryKey : true, 
             autoIncrement: true
         },
-        chat_messages: {
-            type: DataTypes.ARRAY(),
-        },
     });
 }

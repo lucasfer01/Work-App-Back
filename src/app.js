@@ -30,7 +30,7 @@ const {createChatAndAddMessage,
     showChatsByUser,
     findChat,
     deleteChat
-} = require('./routes/sockerChat.routes');
+} = require('./controllers/socketChat.controller.js');
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
