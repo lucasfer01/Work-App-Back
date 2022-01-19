@@ -9,9 +9,6 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             primaryKey : true, 
             autoIncrement: true
-        },
-        chat_messages: {
-            type: DataTypes.ARRAY(),
-        },
+        }
     });
 }

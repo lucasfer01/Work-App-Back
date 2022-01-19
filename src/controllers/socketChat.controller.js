@@ -21,6 +21,7 @@ const createChatAndAddMessage = async (dataChat) => {
             users: [senderUser.usr_id, receiverUser.usr_id]
         },
     })
+    console.log(chat);
     await senderUser.addChat(chat[0]);
     await receiverUser.addChat(chat[0]);
     await chat[0].addUsers([senderUser.usr_id, receiverUser.usr_id]);

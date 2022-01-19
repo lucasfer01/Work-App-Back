@@ -30,7 +30,7 @@ const {createChatAndAddMessage,
     showChatsByUser,
     findChat,
     deleteChat
-} = require('./routes/sockerChat.routes');
+} = require('./controllers/socketChat.controller.js');
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
@@ -135,6 +135,7 @@ io.on('connection', (socket) => {
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", (data) => {
         console.log(data);
+        createChatAndAddMessage(data);
         //Enviando el mensaje al receptor
         if(onlineUsers[data.receiver]){
             io.to(onlineUsers[data.receiver]).emit("message", data);
