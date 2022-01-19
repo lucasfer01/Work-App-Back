@@ -42,6 +42,9 @@ const showJobs = (req, res,next) => {
         include: [{
             required: false,
             model: User,
+            through: {
+                attributes: []
+            },
             where: {
                 usr_isActive: true
             }
@@ -69,6 +72,9 @@ const showJobById = (req,res,next) => {
         include: [{
             required: false,
             model: User,
+            through: {
+                attributes: []
+            },
             where: {
                 usr_isActive: true
             }

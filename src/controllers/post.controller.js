@@ -1,5 +1,5 @@
 // Post model
-const { Post, Job } = require('../database/db');
+const { Post, Job, User } = require('../database/db');
 
 // Crea un post
 const createPost = (req, res, next) => {
@@ -22,7 +22,23 @@ const showPosts = (req, res, next) => {
     Post.findAll({
         where: {
             post_isActive: true
-        }
+        },
+        attributes: {
+            exclude: ['userUsrId'],
+        },
+        include: [{
+            required: false,
+            model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
+            where: {
+                job_isActive: true
+            }
+        }]
     })
         .then(posts => res.json(posts)) // Retornamos todos los post encontrados
         .catch(error => next(error));
@@ -38,9 +54,18 @@ const showPostById = (req, res, next) => {
         where: {
             post_id: postId
         },
+        attributes: {
+            exclude: ['userUsrId']
+        },
         include: [{
             required: false,
             model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
             where: {
                 job_isActive: true
             }

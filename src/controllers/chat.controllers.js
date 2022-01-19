@@ -1,16 +1,38 @@
-const { Telegraf } = require('telegraf');
-//Telegraf es un constructor que necesita el token de autenticación de mi cuenta.
-const bot = new Telegraf('5091525623:AAGB-DPu3-6nyTqvz3vnAyx3NuAq5gucYhc');
+//Servidor con express
+/*const express = require("express");
+const http = require("http");
+const app = express();
 
-bot.start((ctx) => {
-    //ctx.from -> quien envía el mensaje.
-    ctx.reply('Bienvenido ' + ctx.from.first_name);
-});
+  //Inicializamos socketio
+  const socketio = require("socket.io");
+  const io = socketio(servidor);
 
-bot.help((ctx) => {
-    ctx.reply('Ayuda');
-});
+  //Funcionalidad de socket.io en el servidor
+  io.on("connection", (socket) => {
+    let nombre;
 
+    socket.on("conectado", (nomb) => {
+      nombre = nomb;
+      //socket.broadcast.emit manda el mensaje a todos los clientes excepto al que ha enviado el mensaje
+      socket.broadcast.emit("mensajes", {
+        nombre: nombre,
+        mensaje: `${nombre} ha entrado en la sala del chat`,
+      });
+    });
+
+    socket.on("mensaje", (nombre, mensaje) => {
+      //io.emit manda el mensaje a todos los clientes conectados al chat
+      io.emit("mensajes", { nombre, mensaje });
+    });
+
+    socket.on("disconnect", () => {
+      io.emit("mensajes", {
+        servidor: "Servidor",
+        mensaje: `${nombre} ha abandonado la sala`,
+      });
+    });
+  });
+ 
 bot.settings((ctx) => {
     ctx.reply('Configurar');
 });
@@ -22,10 +44,10 @@ bot.command(['mycommand', 'Mycommand', 'MyCommand', 'MYCOMMAND'], (ctx) => {
 bot.hears('computer', ctx => {
     ctx.reply('Hey, vendo computadoras');
 });
-/* Para cuando el ususario simplemente escriba.
-bot.on('text', ctx => {
-    ctx.reply('Estás escribiendo...');
-});*/
+//  Para cuando el ususario simplemente escriba.
+// bot.on('text', ctx => {
+//     ctx.reply('Estás escribiendo...');
+// });
 //Para reconocer los stickers.
 bot.on('sticker', ctx => {
     ctx.reply('Has enviado un sticker');
@@ -44,11 +66,5 @@ bot.hashtag('programando', ctx => {
 });
 //Inicia el bot
 //bot.launch();
+*/
 
-const chat = (req, res) => {
-    res.send("Holaa") 
-};
-
-module.exports = {
-    chat
-};
