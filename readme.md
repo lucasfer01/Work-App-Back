@@ -257,3 +257,5 @@ BODY: {
   message: "Something else",
 }
 ````
+
+CREAR MODELO VINCULO-LABORAL
