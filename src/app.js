@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 
 // app.use('/', chatRouter); // Ruta Chat
 
-app.use('/', emailPost);
+app.use('/email', emailPost); // Ruta para enviar email
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
@@ -82,7 +82,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
