@@ -1,7 +1,7 @@
 // User model
 const { User } = require('../database/db');
 // Post model
-const { Post, Job, WorkerPost } = require('../database/db');
+const { Post, Job, WorkerPost, Pagos } = require('../database/db');
 
 
 // Crear usuario
@@ -116,6 +116,12 @@ const showUserById = (req, res, next) => {
             where: {
                 wp_isActive: true
             },
+            attributes: {
+                exclude: ['userUsrId','usr_id']
+            }
+        },{
+            required: false,
+            model: Pagos,
             attributes: {
                 exclude: ['userUsrId','usr_id']
             }
