@@ -1,10 +1,13 @@
 // Chat model
-const { Chat, User } = require('../database/db');
+const { Chat, User, Message } = require('../database/db');
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
 
-// Crear Chat
-const createChatAndAddMessage = async (dataChat) => {
-    const { sender, receiver, message } = dataChat;
-    // Buscamos los usuarios
+// Encontrar o crear chat y guardar mensajes
+const saveChat = async (messages) => {
+    const { sender, receiver } = messages[0];
+    if (!sender || !receiver) return {msg: "No messages"}
+    // Buscamos los usuarios que participan del chat
     const senderUser = await User.findOne({
         where: {
             usr_username: sender
@@ -15,56 +18,79 @@ const createChatAndAddMessage = async (dataChat) => {
             usr_username: receiver
         }
     });
-    // Creamos el chat
-    const chat = await Chat.findOrCreate({
-        where: {
-            users: [senderUser.usr_id, receiverUser.usr_id]
-        },
-    })
-    console.log(chat);
-    await senderUser.addChat(chat[0]);
-    await receiverUser.addChat(chat[0]);
-    await chat[0].addUsers([senderUser.usr_id, receiverUser.usr_id]);
-    // Agregamos el mensaje al chat
-    const addMessage = await chat[0].update({
-        chat_messages: [...chat[0].chat_messages, message]
-    })
-    return addMessage;
+    // Buscamos el chat y si no existe lo creamos
+    let chats = await Chat.findAll({
+        include: [{
+            model: User,
+        }]
+    });
+    let chat = chats.find(chat => {
+        return (chat.users.find(user => user.usr_username === sender) && chat.users.find(user => user.usr_username === receiver))
+    });
+    if (!chat) {
+        chat = await Chat.create();
+        // Agregamos el chat a los usuarios
+        await senderUser.addChats([chat.chat_id]);
+        await receiverUser.addChats([chat.chat_id]);
+        // Agregamos los users al chat
+        await chat.addUsers([senderUser.usr_id, receiverUser.usr_id]);
+    }
+    // agregamos los mensajes al chat
+    const newMessages = await Message.bulkCreate(messages);
+    await chat.addMessages(newMessages);
+    return chat;
 }
 
 // Mostrar los chats
-const showChats = async (req, res,next) => {
-    const chats = await Chat.findAll()  // Buscamos todos los chats
-    return res.status(200).json(chats); 
+const showChats = async (req, res, next) => {
+    const chats = await Chat.findAll({
+        include: [
+            {
+                model: User,
+            },
+            {
+                model: Message,
+                required: false,
+            }
+        ]
+    }) 
+    return res.status(200).json(chats);
 }
 
 // Mostrar chats de un usuario
-const showChatsByUser = async (userId) => {
+const showChatsByUser = async (userName) => {
+    const user = await User.findOne({
+        where: {
+            usr_username: userName
+        },
+        attributes: ["usr_id", "usr_username"],
+        include: [{
+            model: Chat,
+            attributes: ["chat_id"],
+        }]
+    });
+    if (!user) {
+        return {
+            message: "User not found"
+        }
+    }
     const chats = await Chat.findAll({
         where: {
-            users: [userId]
-        }
+            chat_id: {
+                [Op.in]: user.chats.map(chat => chat.chat_id)
+            }
+        },
+        include: [{
+            model: User,
+            attributes: ["usr_id", "usr_username"],
+        },
+        {
+            model: Message,
+            required: false,
+        }]
     });
-}
-
-// Buscar chat especifico entre dos personas
-const findChat = async (sender, receiver) => {
-    const senderUser = await User.findOne({
-        where: {
-            usr_username: sender
-        }
-    });
-    const receiverUser = await User.findOne({
-        where: {
-            usr_username: receiver
-        }
-    });
-    const chat = await Chat.findOne({
-        where: {
-            users: [senderUser.usr_id, receiverUser.usr_id]
-        }
-    });
-    return chat;
+    console.log("userChats", chats);
+    return chats;
 }
 
 // Eliminar chat
@@ -83,9 +109,8 @@ const deleteChat = async (req, res, next) => {
 
 // Exportamos los controladores
 module.exports = {
-    createChatAndAddMessage,
+    saveChat,
     showChats,
     showChatsByUser,
-    findChat,
     deleteChat
 }
