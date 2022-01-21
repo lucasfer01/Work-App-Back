@@ -159,7 +159,7 @@ const getChatsTemp = (socketId) => {
     let chats = [];
     Object.keys(messages).forEach(messageKey => {
         if (messageKey.includes(userId)) {
-            chats = messages[messageKey];
+            chats = [...chats, messages[messageKey]];
         }
     });
     return chats;
@@ -209,8 +209,7 @@ io.on('connection', (socket) => {
             });
         } 
     });
-    //Escuchando un usuario que se desconecta
-    socket.on('disconnect', () => {
+    socket.on("save-chat", (data) => {
         //Obtenemos los chats temporales del usuario que se desconecta
         const chatsTemp = getChatsTemp(socket.id);
         console.log("chatstemp", chatsTemp);
@@ -220,6 +219,9 @@ io.on('connection', (socket) => {
         });
         //Eliminamos los chats temporales del usuario que se desconecta
         deleteChatsTemp(socket.id);
+    })
+    //Escuchando un usuario que se desconecta
+    socket.on('disconnect', () => {
         //Eliminamos el usuario de onlineUsers
         removeUser(socket.id);
     });

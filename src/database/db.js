@@ -24,7 +24,8 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
       require: true,
       rejectUnauthorized: false
     }
-  }
+  },
+  logging: false
 }
 );
 

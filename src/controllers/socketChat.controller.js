@@ -5,20 +5,12 @@ const Op = Sequelize.Op;
 
 // Obtener o crear un chat mediante ids de usuario emisor y receptor
 const getOrCreateChat = async (userId1, userId2) => {
-    let [chat, created] = await Chat.findOrCreate({
+    console.log("userids", userId1, userId2);
+    /* let chat = await Chat.findOne({
         where: {
-            [Op.or]: [
-                {
-                    chat_userIds: {
-                        [Op.contains]: [userId1, userId2]
-                    }
-                },
-                {
-                    chat_userIds: {
-                        [Op.contains]: [userId2, userId1]
-                    }
-                }
-            ]
+            chat_userIds: { 
+                [Op.contains]: [userId1, userId2]
+            }
         },
         include: [
             {
@@ -30,8 +22,15 @@ const getOrCreateChat = async (userId1, userId2) => {
                 required: false,
             }
         ]
-    })
-    if (!created) {
+    }) */
+    let chats = await Chat.findAll({
+        include: Message,
+    });
+    let chat = chats.find(c => c.chat_userIds.includes(userId1) && c.chat_userIds.includes(userId2));
+    if (!chat) {
+        chat = await Chat.create({
+            chat_userIds: [userId1, userId2]
+        })
         // Agregamos el chat a los usuarios
         const [senderUser, receiverUser] = await Promise.all([
             User.findOne({
@@ -53,7 +52,23 @@ const getOrCreateChat = async (userId1, userId2) => {
         // Agregamos los users al chat
         await chat.addUsers([senderUser.usr_id, receiverUser.usr_id]);
     }
-    return chat;
+    chat = await Chat.findOne({
+        where: {
+            chat_id: chat.chat_id
+        },
+        include: [
+            {
+                model: User,
+                required: false,
+            },
+            {
+                model: Message,
+                required: false,
+            }
+        ]
+    })
+    console.log("chatfound", chat)
+    return chat.messages ? chat : [];
 }
 
 // Guardar mensajes en un chat
