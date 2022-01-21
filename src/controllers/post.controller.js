@@ -1,5 +1,5 @@
 // Post model
-const { Post, Job, User } = require('../database/db');
+const { Post, Job } = require('../database/db');
 
 // Crea un post
 const createPost = async (req, res, next) => {

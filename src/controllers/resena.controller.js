@@ -17,7 +17,7 @@ const createResena = async (req, res, next) => {
 
     const puntaje = findResenas.reduce((previousValue, currentValue) => previousValue + currentValue.resena_score, 0) / cantidadResenas;
 
-    User.findByPk(createdResena.usr_id).then(user => user.update({usr_score: puntaje.toFixed(2)})).then(response => res.json(response)).catch(error => res.json({msg:error}));
+    User.findByPk(createdResena.usr_id).then(user => user.update({usr_score: parseFloat(puntaje.toFixed(2))})).then(response => res.json(response)).catch(error => res.json({msg:error}));
 }
 
 module.exports = {
