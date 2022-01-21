@@ -3,7 +3,7 @@ const mercadopago = require('mercadopago');
 // Enviroment
 const { MP_ACCESS_TOKEN, MP_FAILURE_URL, MP_SUCCESS_URL } = require('../config');
 // Pagos Model
-const { Pagos } = require('../database/db');
+const { Pagos, User } = require('../database/db');
 
 
 // Access token
@@ -58,11 +58,16 @@ const buscarPreferencia = (req, res, next) => {
 
             // Buscamos la orden
             Pagos.findByPk(id)
-            .then(orden => orden.update({
+                .then(orden => orden.update({
                     status: preferencia.body.results[index].status,
                     payment_id: preferencia.body.results[index].collector_id
                 }))
                 .then(orderUpdated => {
+                    // Actualizamos el plan del usuario
+                    // Si el pago fue aprobado
+                    if (orderUpdated.status === 'approved') {
+                        User.findByPk(orderUpdated.usr_id).then(user => user.update({ usr_plan: 'premium' })).then(response => console.log(response)).catch(error => console.log({ error: error }));
+                    }
 
                     // Devolvemos el resultado
                     res.json([orderUpdated, preferencia.body.results[index]]);

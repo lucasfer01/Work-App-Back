@@ -206,6 +206,11 @@ codigo de seguridad: 123
 Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
 
 los demas datos se pueden inventar, tales como dni y mail
+
+
+POSTPAGO:
+  GET: 
+    '/pagos/:external_reference' (Va como query en la url que redirecciona cuando se realiza el pago)
 ````
 
 
