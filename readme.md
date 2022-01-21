@@ -58,6 +58,8 @@ SUBRUTAS:
   Put:
     '/:userId' (Modificar usuario)
 
+    '/update-plan/:userId' (Actualizar el plan del usuario)
+
   Delete:
     '/:userId' (Eliminar usuario) 
 
@@ -258,4 +260,20 @@ BODY: {
 }
 ````
 
-CREAR MODELO VINCULO-LABORAL
+### Reseñas
+
+````
+RUTA: http://localhost:3000/resena
+
+SUBRUTAS: 
+  POST:
+    '/' (Crear resena)
+
+    Cuando se crea una reseña el usr_score se actualiza automaticamente
+
+
+  JSON: {
+          "resena_score": 3,     <-- numero del 1 al 5,
+          "usr_id": "id de usuario que hizo el post"
+        }
+````
