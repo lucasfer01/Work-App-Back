@@ -4,7 +4,6 @@ const app = express();
 // http server
 const { createServer } = require('http');
 const httpServer = createServer(app);
-
 // path
 const path = require('path');
 // Enviroment
@@ -26,6 +25,15 @@ const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
 const { emailPost } = require('./routes/nodemailer.routes.js');
+const { resenaRoutes } = require('./routes/resena.routes');
+const {
+    saveChat,
+    showChats,
+    showChatsByUser,
+    deleteChat
+} = require('./controllers/socketChat.controller.js');
+const socketChatRoutes = require('./routes/socketChat.routes');
+
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
@@ -54,7 +62,7 @@ app.get('/', (req, res) => {
 
 // app.use('/', chatRouter); // Ruta Chat
 
-app.use('/', emailPost);
+app.use('/email', emailPost); // Ruta para enviar email
 
 app.use('/user', userRoutes); // Rutas Usuarios
 
@@ -74,8 +82,11 @@ app.use('/push-notification', pushNotificationRoutes); // Suscribirse a notifica
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
 
+app.use('/resena', resenaRoutes); // Resenas
 
 app.use('/workerPost', workerPostRoutes); // workerpost
+
+app.use('/chat', socketChatRoutes); // Ruta Chat
 
 // Server
 const server = app.listen(config.PORT, () => {
@@ -101,26 +112,112 @@ const io = socketIO(server, {
 });
 
 // Almacenar sockets de usuarios conectados
-let connectedUsers = {};
+let onlineUsers = {};
+// Almacenar mensajes antes de guardarlos en DB
+let messages = {};
+
+// Aladir socket de usuario
+const addUser = (userName, socketId) => {
+    onlineUsers[userName] = socketId;
+};
+
+// Eliminar socket de usuario
+const removeUser = (socketId) => {
+    Object.keys(onlineUsers).forEach(userName => {
+        if (onlineUsers[userName] === socketId) {
+            delete onlineUsers[userName];
+        }
+    });
+};
+
+// Agregar prop a mensajes con nombre del chat y agregar mensaje a la lista de mensajes
+const saveChatTemp = (chat) => {
+    const { sender, receiver, message } = chat;
+    const chatId1 = sender + "-" + receiver;
+    const chatId2 = receiver + "-" + sender;
+    const existingChat = messages[chatId1] || messages[chatId2];
+    if (!existingChat) {
+        messages[chatId1] = [chat];
+    }   else {
+        existingChat.push(chat);
+    }
+    return {msg: "Mensaje guardado temporalmente"};
+}
+
+// Obtener nombre de usuario a travez del socketId
+const getUserBySocket = (socketId) => {
+    let userName = null;
+    Object.keys(onlineUsers).forEach(user => {
+        if (onlineUsers[user] === socketId) {
+            userName = user;
+        }
+    });
+    return userName;
+}
+
+// Obtener los chats del usuario que se desconecta
+const getChatsTemp = (socketId) => {
+    const userName = getUserBySocket(socketId);
+    let chats = [];
+    Object.keys(messages).forEach(chatId => {
+        if (chatId.includes(userName)) {
+            chats = [...chats, messages[chatId]];
+        }
+    });
+    return chats;
+}
+
+// Eliminar los chats temporales del usuario que se desconecta
+const deleteChatsTemp = (socketId) => {
+    const userName = getUserBySocket(socketId);
+    Object.keys(messages).forEach(chatId => {
+        if (chatId.includes(userName)) {
+            delete messages[chatId];
+        }
+    });
+}
+
+
+
+
+
 
 // websockets
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id); 
     //Guardamos el socket en el objeto de usuarios conectados
-    socket.on("register", (data) => {
-        console.log(data);
-        connectedUsers[data] = socket.id;
-        console.log(connectedUsers);
+    socket.on("register", async (data) => {
+        addUser(data, socket.id);
+        const chatHistory = await showChatsByUser(data);
+        io.to(socket.id).emit('chatHistory', chatHistory);
     });
     //Escuchando un nuevo mensaje enviado por el cliente
-    socket.on("message", (data) => {
-        console.log(data);
+    socket.on("message", async (data) => {
+        //Guardamos el mensaje en el objeto de mensajes temporales
+        saveChatTemp(data);
         //Enviando el mensaje al receptor
-        socket.to(connectedUsers[data.receiver]).emit("message", data);
+        if(onlineUsers[data.receiver]){
+            io.to(onlineUsers[data.receiver]).emit("response", data);
+            //Enviando notificación al receptor
+            io.to(onlineUsers[data.receiver]).emit("notification", {
+                type: "message",
+                body: data,
+            });
+        } 
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        //Obtenemos los chats temporales del usuario que se desconecta
+        const chatsTemp = getChatsTemp(socket.id);
+        console.log("chatstemp", chatsTemp);
+        //Guardamos los chats temporales en la base de datos
+        chatsTemp.forEach(async chat => {
+            await saveChat(chat);
+        });
+        //Eliminamos los chats temporales del usuario que se desconecta
+        deleteChatsTemp(socket.id);
+        //Eliminamos el usuario de onlineUsers
+        removeUser(socket.id);
     });
 })
 

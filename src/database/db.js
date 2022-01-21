@@ -7,7 +7,11 @@ const modelsDefiners = {
     user: require('../models/user'),
     job: require('../models/job'),
     post: require('../models/post'),
-    workerPost: require('../models/workerPost')
+    workerPost: require('../models/workerPost'),
+    pagos: require('../models/pagos'),
+    resenas: require('../models/resenas'),
+    chat: require('../models/chat'),
+    message: require('../models/message'),
 }
 
 // PostgreSQL
@@ -22,7 +26,8 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
       require: true,
       rejectUnauthorized: false
     }
-  }
+  },
+  logging: false
 }
 );
 
@@ -43,7 +48,7 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const {User, Job, Post, WorkerPost} = sequelize.models;
+const {User, Job, Post, WorkerPost, Pagos, Resenas, Chat, Message} = sequelize.models;
 
 // Relaciones
 User.belongsToMany(Job, {through: 'User_Job'}); // user-job
@@ -60,6 +65,18 @@ WorkerPost.belongsTo(User); // User-Workerpost
 
 Post.belongsToMany(Job, {through: 'Post_Job'}); // Post-Job
 Job.belongsToMany(Post, {through: 'Post_Job'}); // Post-Job
+
+User.hasMany(Pagos, {foreignKey: 'usr_id'}); // User-Pagos
+Pagos.belongsTo(User); // User-Pagos
+
+User.hasMany(Resenas, {foreignKey: 'usr_id'}); // User-resenas
+Resenas.belongsTo(User); // User-Resenas
+
+User.belongsToMany(Chat, {through: 'User_Chat'}); // User-Chat
+Chat.belongsToMany(User, {through: 'User_Chat'}); // User-Chat
+
+Chat.hasMany(Message, {foreignKey: 'chat_id'}); // Chat-Message
+Message.belongsTo(Chat); // Chat-Message
 
 module.exports = {
     ...sequelize.models,

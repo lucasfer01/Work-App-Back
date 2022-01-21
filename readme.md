@@ -58,6 +58,8 @@ SUBRUTAS:
   Put:
     '/:userId' (Modificar usuario)
 
+    '/update-plan/:userId' (Actualizar el plan del usuario)
+
   Delete:
     '/:userId' (Eliminar usuario) 
 
@@ -204,6 +206,11 @@ codigo de seguridad: 123
 Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
 
 los demas datos se pueden inventar, tales como dni y mail
+
+
+POSTPAGO:
+  GET: 
+    '/pagos/:external_reference' (Va como query en la url que redirecciona cuando se realiza el pago)
 ````
 
 
@@ -258,4 +265,20 @@ BODY: {
 }
 ````
 
-CREAR MODELO VINCULO-LABORAL
+### Reseñas
+
+````
+RUTA: http://localhost:3000/resena
+
+SUBRUTAS: 
+  POST:
+    '/' (Crear resena)
+
+    Cuando se crea una reseña el usr_score se actualiza automaticamente
+
+
+  JSON: {
+          "resena_score": 3,     <-- numero del 1 al 5,
+          "usr_id": "id de usuario que hizo el post"
+        }
+````

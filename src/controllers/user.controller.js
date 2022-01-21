@@ -1,7 +1,7 @@
 // User model
 const { User } = require('../database/db');
 // Post model
-const { Post, Job, WorkerPost } = require('../database/db');
+const { Post, Job, WorkerPost, Pagos, Chat } = require('../database/db');
 
 
 // Crear usuario
@@ -68,6 +68,12 @@ const showUsers = (req, res, next) => {
             attributes: {
                 exclude: ['userUsrId', 'usr_id']
             }
+        }, {
+            required: false,
+            model: Chat,
+            attributes: {
+                exclude: ["User_Chat"]
+            }
         }]
     })
         .then(response => {
@@ -119,6 +125,18 @@ const showUserById = (req, res, next) => {
             attributes: {
                 exclude: ['userUsrId','usr_id']
             }
+        },{
+            required: false,
+            model: Pagos,
+            attributes: {
+                exclude: ['userUsrId','usr_id']
+            }
+        }, {
+            required: false,
+            model: Chat,
+            attributes: {
+                exclude: ["User_Chat"]
+            }
         }]
     })
         .then(user => res.json(user))
@@ -131,6 +149,7 @@ const modifyUser = (req, res, next) => {
     const { userId } = req.params;
     // Data a modificar
     const dataUser = req.body;
+    console.log("datauser", dataUser);
 
     // Buscamos el usuario por el id
     User.findByPk(userId)
