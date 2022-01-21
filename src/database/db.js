@@ -9,7 +9,9 @@ const modelsDefiners = {
     post: require('../models/post'),
     workerPost: require('../models/workerPost'),
     pagos: require('../models/pagos'),
-    resenas: require('../models/resenas')
+    resenas: require('../models/resenas'),
+    chat: require('../models/chat'),
+    message: require('../models/message'),
 }
 
 // PostgreSQL
@@ -46,7 +48,7 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const {User, Job, Post, WorkerPost, Pagos, Resenas} = sequelize.models;
+const {User, Job, Post, WorkerPost, Pagos, Resenas, Chat, Message} = sequelize.models;
 
 // Relaciones
 User.belongsToMany(Job, {through: 'User_Job'}); // user-job
@@ -69,6 +71,12 @@ Pagos.belongsTo(User); // User-Pagos
 
 User.hasMany(Resenas, {foreignKey: 'usr_id'}); // User-resenas
 Resenas.belongsTo(User); // User-Resenas
+
+User.belongsToMany(Chat, {through: 'User_Chat'}); // User-Chat
+Chat.belongsToMany(User, {through: 'User_Chat'}); // User-Chat
+
+Chat.hasMany(Message, {foreignKey: 'chat_id'}); // Chat-Message
+Message.belongsTo(Chat); // Chat-Message
 
 module.exports = {
     ...sequelize.models,

@@ -1,7 +1,7 @@
 // User model
 const { User } = require('../database/db');
 // Post model
-const { Post, Job, WorkerPost, Pagos } = require('../database/db');
+const { Post, Job, WorkerPost, Pagos, Chat } = require('../database/db');
 
 
 // Crear usuario
@@ -68,6 +68,12 @@ const showUsers = (req, res, next) => {
             attributes: {
                 exclude: ['userUsrId', 'usr_id']
             }
+        }, {
+            required: false,
+            model: Chat,
+            attributes: {
+                exclude: ["User_Chat"]
+            }
         }]
     })
         .then(response => {
@@ -124,6 +130,11 @@ const showUserById = (req, res, next) => {
             model: Pagos,
             attributes: {
                 exclude: ['userUsrId','usr_id']
+        }, {
+            required: false,
+            model: Chat,
+            attributes: {
+                exclude: ["User_Chat"]
             }
         }]
     })
