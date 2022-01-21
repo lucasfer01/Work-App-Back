@@ -36,7 +36,11 @@ module.exports = (sequelize) => {
             type: DataTypes.JSON // Google map!!
         },
         usr_score: {
-            type: DataTypes.INTEGER
+            type: DataTypes.FLOAT,
+            validate: {
+                min: 1,
+                max: 5
+            }
         },
         usr_isActive: {
             type: DataTypes.BOOLEAN,
@@ -62,6 +66,11 @@ module.exports = (sequelize) => {
         },
         usr_banner:{
             type: DataTypes.ARRAY(DataTypes.STRING)
+        },
+        usr_plan: {
+            type: DataTypes.ENUM('free','premium'),
+            allowNull: false,
+            defaultValue: 'free'
         }
     });
 }

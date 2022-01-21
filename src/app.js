@@ -25,6 +25,7 @@ const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
 const { emailPost } = require('./routes/nodemailer.routes.js');
+const { resenaRoutes } = require('./routes/resena.routes');
 const {
     saveChat,
     showChats,
@@ -32,6 +33,7 @@ const {
     deleteChat
 } = require('./controllers/socketChat.controller.js');
 const socketChatRoutes = require('./routes/socketChat.routes');
+
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
@@ -80,6 +82,7 @@ app.use('/push-notification', pushNotificationRoutes); // Suscribirse a notifica
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
 
+app.use('/resena', resenaRoutes); // Resenas
 
 app.use('/workerPost', workerPostRoutes); // workerpost
 
@@ -90,7 +93,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: false })
+    sequelize.sync({ force: true })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
