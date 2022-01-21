@@ -10,5 +10,9 @@ module.exports = (sequelize) => {
             primaryKey : true, 
             autoIncrement: true
         },
+        chat_userIds: {
+            type: DataTypes.ARRAY(DataTypes.STRING),
+            allowNull: false
+        },
     });
 }
