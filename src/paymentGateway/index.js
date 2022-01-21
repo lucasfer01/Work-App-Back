@@ -32,7 +32,8 @@ const checkout = async (req, res, next) => {
             failure: `${MP_FAILURE_URL}/${pago.id}`,
             pending: ''
         },
-        external_reference: `${pago.id}`
+        external_reference: `${pago.id}`,
+        auto_return: 'approved'
     }
 
     // Crear preferencia

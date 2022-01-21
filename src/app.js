@@ -25,6 +25,7 @@ const { workerPostRoutes } = require('./routes/workerPost.routes');
 const { workerpostJobRouter } = require('./routes/workerpost_job.routes');
 const { postJobRoutes } = require('./routes/post_job.routes');
 const { emailPost } = require('./routes/nodemailer.routes.js');
+const { resenaRoutes } = require('./routes/resena.routes');
 
 // Controllers
 const { cargarOficios } = require('./controllers/app.controller');
@@ -73,6 +74,7 @@ app.use('/push-notification', pushNotificationRoutes); // Suscribirse a notifica
 
 app.use('/checkout', mercadopagoRoutes); // Checkout mercadopago
 
+app.use('/resena', resenaRoutes); // Resenas
 
 app.use('/workerPost', workerPostRoutes); // workerpost
 
