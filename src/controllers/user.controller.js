@@ -130,6 +130,7 @@ const showUserById = (req, res, next) => {
             model: Pagos,
             attributes: {
                 exclude: ['userUsrId','usr_id']
+            }
         }, {
             required: false,
             model: Chat,
