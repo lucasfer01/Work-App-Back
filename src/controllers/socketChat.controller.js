@@ -3,46 +3,74 @@ const { Chat, User, Message } = require('../database/db');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
 
-// Encontrar o crear chat y guardar mensajes
-const saveChat = async (messages) => {
-    const { sender, receiver } = messages[0];
-    if (!sender || !receiver) return {msg: "No messages"}
-    // Buscamos los usuarios que participan del chat
-    const senderUser = await User.findOne({
+// Obtener o crear un chat mediante ids de usuario emisor y receptor
+const getOrCreateChat = async (userId1, userId2) => {
+    let [chat, created] = await Chat.findOrCreate({
         where: {
-            usr_username: sender
-        }
-    });
-    const receiverUser = await User.findOne({
-        where: {
-            usr_username: receiver
-        }
-    });
-    // Buscamos el chat y si no existe lo creamos
-    let chats = await Chat.findAll({
-        include: [{
-            model: User,
-        }]
-    });
-    let chat = chats.find(chat => {
-        return (chat.users.find(user => user.usr_username === sender) && chat.users.find(user => user.usr_username === receiver))
-    });
-    if (!chat) {
-        chat = await Chat.create();
+            [Op.or]: [
+                {
+                    chat_userIds: {
+                        [Op.contains]: [userId1, userId2]
+                    }
+                },
+                {
+                    chat_userIds: {
+                        [Op.contains]: [userId2, userId1]
+                    }
+                }
+            ]
+        },
+        include: [
+            {
+                model: User,
+                required: false,
+            },
+            {
+                model: Message,
+                required: false,
+            }
+        ]
+    })
+    if (!created) {
         // Agregamos el chat a los usuarios
+        const [senderUser, receiverUser] = await Promise.all([
+            User.findOne({
+                where: {
+                    usr_id: userId1
+                }
+            }),
+            User.findOne({
+                where: {
+                    usr_id: userId2
+                }
+            })
+        ]);
+        if (!senderUser || !receiverUser) return {msg: "No users"}
         await senderUser.addChats([chat.chat_id]);
-        await receiverUser.addChats([chat.chat_id]);
+        if (senderUser.usr_id !== receiverUser.usr_id) {
+            await receiverUser.addChats([chat.chat_id])
+        };
         // Agregamos los users al chat
         await chat.addUsers([senderUser.usr_id, receiverUser.usr_id]);
     }
+    return chat;
+}
+
+// Guardar mensajes en un chat
+const saveMessages = async (messages) => {
+    if (!messages[0]) return [];
+    const { sender, receiver } = messages[0];
+    if (!sender || !receiver || !messages[0]) return {msg: "No messages"}
+    // Buscamos el chat y si no existe lo creamos
+    let chat = await getOrCreateChat(sender, receiver);
     // agregamos los mensajes al chat
     const newMessages = await Message.bulkCreate(messages);
     await chat.addMessages(newMessages);
     return chat;
 }
 
-// Mostrar los chats
-const showChats = async (req, res, next) => {
+// Mostrar todos los chats
+const getAllChats = async (req, res, next) => {
     const chats = await Chat.findAll({
         include: [
             {
@@ -58,59 +86,37 @@ const showChats = async (req, res, next) => {
 }
 
 // Mostrar chats de un usuario
-const showChatsByUser = async (userName) => {
-    const user = await User.findOne({
-        where: {
-            usr_username: userName
-        },
-        attributes: ["usr_id", "usr_username"],
-        include: [{
-            model: Chat,
-            attributes: ["chat_id"],
-        }]
-    });
-    if (!user) {
-        return {
-            message: "User not found"
-        }
-    }
+const getChatsByUserId = async (userId) => {
     const chats = await Chat.findAll({
         where: {
-            chat_id: {
-                [Op.in]: user.chats.map(chat => chat.chat_id)
+            chat_userIds: {
+                [Op.contains]: [userId]
             }
         },
-        include: [{
-            model: User,
-            attributes: ["usr_id", "usr_username"],
-        },
-        {
-            model: Message,
-            required: false,
-        }]
-    });
+    })
     console.log("userChats", chats);
     return chats;
 }
 
 // Eliminar chat
-const deleteChat = async (req, res, next) => {
-    const { chatId } = req.params;
+const deleteChat = async (user1, user2) => {
     const chat = await Chat.findOne({
         where: {
-            chat_id: chatId
+            chat_userIds: {
+                [Op.contains]: [user1, user2]
+            }
         }
-    });
+    })
+    if (!chat) return {msg: "No chat"}
     await chat.destroy();
-    return res.status(200).json({
-        message: 'Chat eliminado'
-    });
+    return {msg: "Chat deleted"}
 }
 
 // Exportamos los controladores
 module.exports = {
-    saveChat,
-    showChats,
-    showChatsByUser,
+    getOrCreateChat,
+    saveMessages,
+    getAllChats,
+    getChatsByUserId,
     deleteChat
 }
