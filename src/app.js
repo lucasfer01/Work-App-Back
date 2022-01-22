@@ -94,7 +94,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
@@ -222,7 +222,12 @@ io.on('connection', (socket) => {
         });
         //Eliminamos los chats temporales del usuario que se desconecta
         deleteChatsTemp(socket.id);
-    })
+    });
+    socket.on("chat-data", async (userId) => {
+        const userChats = await getChatsByUserId(userId);
+        console.log("userChats", userChats);
+        io.to(socket.id).emit("chat-data", userChats);
+    });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
         //Eliminamos el usuario de onlineUsers
