@@ -37,9 +37,9 @@ const getOrCreateChat = async (userId1, userId2) => {
             })
         ]);
         if (!senderUser || !receiverUser) return {msg: "No users"}
-        await senderUser.addChats([chat.chat_id]);
+        await senderUser.addChat(chat.chat_id);
         if (senderUser.usr_id !== receiverUser.usr_id) {
-            await receiverUser.addChats([chat.chat_id])
+            await receiverUser.addChat(chat.chat_id)
         };
         // Agregamos los users al chat
         await chat.addUsers([senderUser.usr_id, receiverUser.usr_id]);
