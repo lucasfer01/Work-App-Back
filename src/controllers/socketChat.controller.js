@@ -6,7 +6,7 @@ const Op = Sequelize.Op;
 // Obtener o crear un chat mediante ids de usuario emisor y receptor
 const getOrCreateChat = async (userId1, userId2) => {
     console.log("userids", userId1, userId2);
-    /* let chat = await Chat.findOne({
+    let chat = await Chat.findOne({
         where: {
             chat_userIds: { 
                 [Op.contains]: [userId1, userId2]
@@ -14,23 +14,15 @@ const getOrCreateChat = async (userId1, userId2) => {
         },
         include: [
             {
-                model: User,
-                required: false,
-            },
-            {
                 model: Message,
                 required: false,
             }
         ]
-    }) */
-    let chats = await Chat.findAll({
-        include: Message,
-    });
-    let chat = chats.find(c => c.chat_userIds.includes(userId1) && c.chat_userIds.includes(userId2));
+    })
     if (!chat) {
         chat = await Chat.create({
             chat_userIds: [userId1, userId2]
-        })
+        });
         // Agregamos el chat a los usuarios
         const [senderUser, receiverUser] = await Promise.all([
             User.findOne({
@@ -58,16 +50,12 @@ const getOrCreateChat = async (userId1, userId2) => {
         },
         include: [
             {
-                model: User,
-                required: false,
-            },
-            {
                 model: Message,
                 required: false,
             }
         ]
     })
-    console.log("chatfound", chat)
+    console.log("foundchat", chat);
     return chat.messages ? chat : [];
 }
 
