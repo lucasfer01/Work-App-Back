@@ -108,6 +108,7 @@ const getChatsByUserId = async (userId) => {
                 [Op.contains]: [userId]
             }
         },
+        include: User
     })
     console.log("userChats", chats);
     return chats;

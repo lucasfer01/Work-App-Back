@@ -94,7 +94,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
@@ -191,6 +191,11 @@ io.on('connection', (socket) => {
     socket.on("register", async (data) => {
         addUser(data, socket.id);
     });
+    // Enviar chats del usuario
+    socket.on("data", async (data) => {
+        const chats = await getChatsByUserId(data);
+        io.to(socket.id).emit("data", chats)
+    })
     //Obtenemos los mensajes del chat si existen
     socket.on("chat-history", async (data) => {
         const chatHistory = await getOrCreateChat(data.userId1, data.userId2);
