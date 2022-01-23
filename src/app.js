@@ -27,7 +27,10 @@ const { postJobRoutes } = require('./routes/post_job.routes');
 const { emailPost } = require('./routes/nodemailer.routes.js');
 const { resenaRoutes } = require('./routes/resena.routes');
 const {
+    getChatByUsers,
+    getChatById,
     getOrCreateChat,
+    saveMessage,
     saveMessages,
     getAllChats,
     getChatsByUserId,
@@ -188,20 +191,23 @@ const deleteChatsTemp = (socketId) => {
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id); 
     //Guardamos el socket en el objeto de usuarios conectados
-    socket.on("register", async (data) => {
-        addUser(data, socket.id);
+    socket.on("register", async (userId) => {
+        addUser(userId, socket.id);
     });
     //Obtenemos los mensajes del chat si existen
     socket.on("chat-history", async (data) => {
-        const chatHistory = await getOrCreateChat(data.userId1, data.userId2);
-        io.to(socket.id).emit('chat-history', chatHistory?.messages);
+        let chatHistory;
+        console.log("losdatos", data);
+        if (data.chatId) chatHistory = await getChatById(data.chatId);
+        else if (data.senderId && data.receiverId) chatHistory = await getChatByUsers(data.senderId, data.receiverId);
+        chatHistory = chatHistory ? chatHistory.messages : [];
+        console.log("loquesemanda", chatHistory);
+        io.to(socket.id).emit('chat-history', chatHistory);
     })
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", async (data) => {
-        //Guardamos el mensaje en el objeto de mensajes temporales
-        saveChatTemp(data);
-        console.log("onlineUsers", onlineUsers);
-        console.log("messages", messages);
+        // Guardamos el mensaje en el chat
+        await saveMessage(data);
         //Enviando el mensaje al receptor
         if(onlineUsers[data.receiver]){
             io.to(onlineUsers[data.receiver]).emit("response", data);
