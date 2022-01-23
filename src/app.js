@@ -194,6 +194,11 @@ io.on('connection', (socket) => {
     socket.on("register", async (userId) => {
         addUser(userId, socket.id);
     });
+    // Enviar chats del usuario
+    socket.on("data", async (data) => {
+        const chats = await getChatsByUserId(data);
+        io.to(socket.id).emit("data", chats)
+    })
     //Obtenemos los mensajes del chat si existen
     socket.on("chat-history", async (data) => {
         let chatHistory;
