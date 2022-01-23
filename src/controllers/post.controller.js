@@ -1,5 +1,6 @@
 // Post model
-const { Post, Job } = require('../database/db');
+const { Post, Job, User } = require('../database/db');
+const user = require('../models/user');
 
 // Crea un post
 const createPost = async (req, res, next) => {
@@ -11,6 +12,7 @@ const createPost = async (req, res, next) => {
             job_name: jobs
         }
     });
+
     // Creamos el post
     const newPost = await Post.create({
         ...post
@@ -30,19 +32,24 @@ const showPosts = (req, res, next) => {
         attributes: {
             exclude: ['userUsrId'],
         },
-        include: [{
-            required: false,
-            model: Job,
-            attributes: {
-                exclude: ['updatedAt','createdAt']
+        include: [
+            {
+                required: false,
+                model: Job,
+                attributes: {
+                    exclude: ['updatedAt', 'createdAt']
+                },
+                through: {
+                    attributes: []
+                },
+                where: {
+                    job_isActive: true
+                }
             },
-            through: {
-                attributes: []
-            },
-            where: {
-                job_isActive: true
+            {
+                model: User,
             }
-        }]
+        ]
     })
         .then(posts => res.json(posts)) // Retornamos todos los post encontrados
         .catch(error => next(error));
@@ -65,7 +72,7 @@ const showPostById = (req, res, next) => {
             required: false,
             model: Job,
             attributes: {
-                exclude: ['updatedAt','createdAt']
+                exclude: ['updatedAt', 'createdAt']
             },
             through: {
                 attributes: []

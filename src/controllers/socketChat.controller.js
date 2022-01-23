@@ -3,34 +3,39 @@ const { Chat, User, Message } = require('../database/db');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
 
-// Obtener o crear un chat mediante ids de usuario emisor y receptor
-const getOrCreateChat = async (userId1, userId2) => {
-    console.log("userids", userId1, userId2);
-    /* let chat = await Chat.findOne({
+// Buscamos chat por id
+const getChatById = async (chatId) => {
+    console.log("chatid", chatId);
+    const chat = await Chat.findOne({
         where: {
-            chat_userIds: { 
-                [Op.contains]: [userId1, userId2]
-            }
+            chat_id: chatId
         },
-        include: [
-            {
-                model: User,
-                required: false,
+        include: [Message, User]
+    })
+    return chat ? chat : null;
+}
+
+
+// Buscar chat por id de usuario emisor y receptor
+const getChatByUsers = async (userId1, userId2) => {
+    const chat = await Chat.findOne({
+        where: {
+            chat_userIds: {
+                [Op.contains]: [userId1, userId2]
             },
-            {
-                model: Message,
-                required: false,
-            }
-        ]
-    }) */
-    let chats = await Chat.findAll({
-        include: Message,
-    });
-    let chat = chats.find(c => c.chat_userIds.includes(userId1) && c.chat_userIds.includes(userId2));
+        },
+        include: [User, Message]
+    })
+    return chat ? chat : null;
+}
+
+// Obtener o crear chat mediante ids de usuario emisor y receptor
+const getOrCreateChat = async (userId1, userId2) => {
+    let chat = await getChatByUsers(userId1, userId2);
     if (!chat) {
         chat = await Chat.create({
             chat_userIds: [userId1, userId2]
-        })
+        });
         // Agregamos el chat a los usuarios
         const [senderUser, receiverUser] = await Promise.all([
             User.findOne({
@@ -45,37 +50,34 @@ const getOrCreateChat = async (userId1, userId2) => {
             })
         ]);
         if (!senderUser || !receiverUser) return {msg: "No users"}
-        await senderUser.addChats([chat.chat_id]);
+        await senderUser.addChat(chat.chat_id);
         if (senderUser.usr_id !== receiverUser.usr_id) {
-            await receiverUser.addChats([chat.chat_id])
+            await receiverUser.addChat(chat.chat_id)
         };
         // Agregamos los users al chat
         await chat.addUsers([senderUser.usr_id, receiverUser.usr_id]);
     }
-    chat = await Chat.findOne({
-        where: {
-            chat_id: chat.chat_id
-        },
-        include: [
-            {
-                model: User,
-                required: false,
-            },
-            {
-                model: Message,
-                required: false,
-            }
-        ]
-    })
-    console.log("chatfound", chat)
-    return chat.messages ? chat : [];
+    console.log("foundchat", chat);
+    return chat;
+}
+
+// Guardar mensaje en chat
+const saveMessage = async (data) => {
+    const { sender, receiver, message} = data;
+    if (!sender || !receiver || !message) return {msg: "No message"};
+    // Buscamos el chat y si no existe lo creamos
+    let chat = await getOrCreateChat(sender, receiver);
+    // agregamos el mensaje al chat
+    const newMessage = await Message.create(message);
+    await chat.addMessage(newMessage);
+    return chat;
 }
 
 // Guardar mensajes en un chat
 const saveMessages = async (messages) => {
     if (!messages[0]) return [];
     const { sender, receiver } = messages[0];
-    if (!sender || !receiver || !messages[0]) return {msg: "No messages"}
+    if (!sender || !receiver) return {msg: "No users"};
     // Buscamos el chat y si no existe lo creamos
     let chat = await getOrCreateChat(sender, receiver);
     // agregamos los mensajes al chat
@@ -130,7 +132,10 @@ const deleteChat = async (user1, user2) => {
 
 // Exportamos los controladores
 module.exports = {
+    getChatById,
+    getChatByUsers,
     getOrCreateChat,
+    saveMessage,
     saveMessages,
     getAllChats,
     getChatsByUserId,
