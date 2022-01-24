@@ -197,6 +197,7 @@ io.on('connection', (socket) => {
     // Enviar chats del usuario
     socket.on("data", async (data) => {
         const chats = await getChatsByUserId(data);
+        console.log("thechats", chats)
         io.to(socket.id).emit("data", chats)
     })
     //Obtenemos los mensajes del chat si existen
