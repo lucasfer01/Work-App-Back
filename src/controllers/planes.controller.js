@@ -5,6 +5,7 @@ const { User } = require('../database/db');
 const actualizarPlan = (req, res, next) => {
     // Recibimos el userId por params
     const { userId } = req.params;
+    if (!userId) return res.status(400).json({ msg: "No user id" });
 
     // Buscamos el usuario
     User.findByPk(userId)
