@@ -27,10 +27,14 @@ const { postJobRoutes } = require('./routes/post_job.routes');
 const { emailPost } = require('./routes/nodemailer.routes.js');
 const { resenaRoutes } = require('./routes/resena.routes');
 const {
-    saveChat,
-    showChats,
-    showChatsByUser,
-    deleteChat
+    getChatByUsers,
+    getChatById,
+    getOrCreateChat,
+    saveMessage,
+    saveMessages,
+    getAllChats,
+    getChatsByUserId,
+    deleteChat,
 } = require('./controllers/socketChat.controller.js');
 const socketChatRoutes = require('./routes/socketChat.routes');
 
@@ -93,7 +97,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
@@ -117,15 +121,15 @@ let onlineUsers = {};
 let messages = {};
 
 // Aladir socket de usuario
-const addUser = (userName, socketId) => {
-    onlineUsers[userName] = socketId;
+const addUser = (userId, socketId) => {
+    onlineUsers[userId] = socketId;
 };
 
 // Eliminar socket de usuario
 const removeUser = (socketId) => {
-    Object.keys(onlineUsers).forEach(userName => {
-        if (onlineUsers[userName] === socketId) {
-            delete onlineUsers[userName];
+    Object.keys(onlineUsers).forEach(userId => {
+        if (onlineUsers[userId] === socketId) {
+            delete onlineUsers[userId];
         }
     });
 };
@@ -133,8 +137,8 @@ const removeUser = (socketId) => {
 // Agregar prop a mensajes con nombre del chat y agregar mensaje a la lista de mensajes
 const saveChatTemp = (chat) => {
     const { sender, receiver, message } = chat;
-    const chatId1 = sender + "-" + receiver;
-    const chatId2 = receiver + "-" + sender;
+    const chatId1 = sender + "&" + receiver;
+    const chatId2 = receiver + "&" + sender;
     const existingChat = messages[chatId1] || messages[chatId2];
     if (!existingChat) {
         messages[chatId1] = [chat];
@@ -146,22 +150,22 @@ const saveChatTemp = (chat) => {
 
 // Obtener nombre de usuario a travez del socketId
 const getUserBySocket = (socketId) => {
-    let userName = null;
-    Object.keys(onlineUsers).forEach(user => {
-        if (onlineUsers[user] === socketId) {
-            userName = user;
+    let userId = null;
+    Object.keys(onlineUsers).forEach(onlineUserId => {
+        if (onlineUsers[onlineUserId] === socketId) {
+            userId = onlineUserId;
         }
     });
-    return userName;
+    return userId;
 }
 
 // Obtener los chats del usuario que se desconecta
 const getChatsTemp = (socketId) => {
-    const userName = getUserBySocket(socketId);
+    const userId = getUserBySocket(socketId);
     let chats = [];
-    Object.keys(messages).forEach(chatId => {
-        if (chatId.includes(userName)) {
-            chats = [...chats, messages[chatId]];
+    Object.keys(messages).forEach(messageKey => {
+        if (messageKey.includes(userId)) {
+            chats = [...chats, messages[messageKey]];
         }
     });
     return chats;
@@ -169,12 +173,13 @@ const getChatsTemp = (socketId) => {
 
 // Eliminar los chats temporales del usuario que se desconecta
 const deleteChatsTemp = (socketId) => {
-    const userName = getUserBySocket(socketId);
-    Object.keys(messages).forEach(chatId => {
-        if (chatId.includes(userName)) {
-            delete messages[chatId];
+    const userId = getUserBySocket(socketId);
+    Object.keys(messages).forEach(messageKey => {
+        if (messageKey.includes(userId)) {
+            delete messages[messageKey];
         }
     });
+    return {msg: "Chats temporales eliminados"};
 }
 
 
@@ -186,15 +191,28 @@ const deleteChatsTemp = (socketId) => {
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id); 
     //Guardamos el socket en el objeto de usuarios conectados
-    socket.on("register", async (data) => {
-        addUser(data, socket.id);
-        const chatHistory = await showChatsByUser(data);
-        io.to(socket.id).emit('chatHistory', chatHistory);
+    socket.on("register", async (userId) => {
+        addUser(userId, socket.id);
     });
+    // Enviar chats del usuario
+    socket.on("data", async (data) => {
+        const chats = await getChatsByUserId(data);
+        io.to(socket.id).emit("data", chats)
+    })
+    //Obtenemos los mensajes del chat si existen
+    socket.on("chat-history", async (data) => {
+        let chatHistory;
+        console.log("losdatos", data);
+        if (data.chatId) chatHistory = await getChatById(data.chatId);
+        else if (data.senderId && data.receiverId) chatHistory = await getChatByUsers(data.senderId, data.receiverId);
+        chatHistory = chatHistory ? chatHistory.messages : [];
+        console.log("loquesemanda", chatHistory);
+        io.to(socket.id).emit('chat-history', chatHistory);
+    })
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", async (data) => {
-        //Guardamos el mensaje en el objeto de mensajes temporales
-        saveChatTemp(data);
+        // Guardamos el mensaje en el chat
+        await saveMessage(data);
         //Enviando el mensaje al receptor
         if(onlineUsers[data.receiver]){
             io.to(onlineUsers[data.receiver]).emit("response", data);
@@ -205,17 +223,24 @@ io.on('connection', (socket) => {
             });
         } 
     });
-    //Escuchando un usuario que se desconecta
-    socket.on('disconnect', () => {
+    socket.on("save-chat", (data) => {
         //Obtenemos los chats temporales del usuario que se desconecta
         const chatsTemp = getChatsTemp(socket.id);
         console.log("chatstemp", chatsTemp);
         //Guardamos los chats temporales en la base de datos
         chatsTemp.forEach(async chat => {
-            await saveChat(chat);
+            await saveMessages(chat);
         });
         //Eliminamos los chats temporales del usuario que se desconecta
         deleteChatsTemp(socket.id);
+    });
+    socket.on("chat-data", async (userId) => {
+        const userChats = await getChatsByUserId(userId);
+        console.log("userChats", userChats);
+        io.to(socket.id).emit("chat-data", userChats);
+    });
+    //Escuchando un usuario que se desconecta
+    socket.on('disconnect', () => {
         //Eliminamos el usuario de onlineUsers
         removeUser(socket.id);
     });

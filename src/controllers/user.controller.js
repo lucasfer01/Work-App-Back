@@ -1,7 +1,7 @@
 // User model
 const { User } = require('../database/db');
 // Post model
-const { Post, Job, WorkerPost, Pagos, Chat } = require('../database/db');
+const { Post, Job, WorkerPost, Pagos, Chat, Message } = require('../database/db');
 
 
 // Crear usuario
@@ -136,7 +136,12 @@ const showUserById = (req, res, next) => {
             model: Chat,
             attributes: {
                 exclude: ["User_Chat"]
-            }
+            },
+            include: [{
+                required: false,
+                model: User,
+                attributes: ["usr_id", "usr_username"]
+            }]
         }]
     })
         .then(user => res.json(user))
