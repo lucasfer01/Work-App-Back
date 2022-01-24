@@ -8,6 +8,8 @@ const { Post, Job, WorkerPost, Pagos, Chat, Message } = require('../database/db'
 const createUser = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataUser = req.body;
+    const { usr_id, usr_username, usr_email} = dataUser;
+    if (!usr_id || !usr_username || !usr_email) return res.status(400).json({msg: "No data"});
 
     // Buscamos el usuario
     User.findOne({ where: { usr_username: dataUser.usr_username } })
@@ -89,6 +91,7 @@ const showUsers = (req, res, next) => {
 const showUserById = (req, res, next) => {
     // UserId req.params
     const { userId } = req.params;
+    if (!userId) return res.status(400).json({msg: "No user id"});
 
     // Buscamos el usuario por id
     User.findOne({
@@ -154,7 +157,7 @@ const modifyUser = (req, res, next) => {
     const { userId } = req.params;
     // Data a modificar
     const dataUser = req.body;
-    console.log("datauser", dataUser);
+    if (!userId || !dataUser) return res.status(400).json({msg: "No user id"});
 
     // Buscamos el usuario por el id
     User.findByPk(userId)
@@ -171,6 +174,7 @@ const modifyUser = (req, res, next) => {
 const deleteUser = (req, res, next) => {
     // userId req.params
     const { userId } = req.params;
+    if (!userId) return res.status(400).json({msg: "No user id"});
 
     // Buscamos el usuario
     User.findByPk(userId)
