@@ -59,6 +59,7 @@ const showPosts = (req, res, next) => {
 const showPostById = (req, res, next) => {
     // Id de req.params
     const { postId } = req.params;
+    if (!postId) return res.status(400).json({ msg: "No post id" });
 
     // Buscamos el post
     Post.findOne({

@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 
 // Buscamos chat por id
 const getChatById = async (chatId) => {
-    console.log("chatid", chatId);
+    if (typeof chatId !== "number") return {msg: "No chat"}
     const chat = await Chat.findOne({
         where: {
             chat_id: chatId
@@ -18,6 +18,7 @@ const getChatById = async (chatId) => {
 
 // Buscar chat por id de usuario emisor y receptor
 const getChatByUsers = async (userId1, userId2) => {
+    if (!userId1 || !userId2) return {msg: "No users"}
     const chat = await Chat.findOne({
         where: {
             chat_userIds: {
@@ -31,6 +32,7 @@ const getChatByUsers = async (userId1, userId2) => {
 
 // Obtener o crear chat mediante ids de usuario emisor y receptor
 const getOrCreateChat = async (userId1, userId2) => {
+    if (!userId1 || !userId2) return {msg: "No users"}
     let chat = await getChatByUsers(userId1, userId2);
     if (!chat) {
         chat = await Chat.create({
@@ -57,7 +59,6 @@ const getOrCreateChat = async (userId1, userId2) => {
         // Agregamos los users al chat
         await chat.addUsers([senderUser.usr_id, receiverUser.usr_id]);
     }
-    console.log("foundchat", chat);
     return chat;
 }
 
@@ -68,7 +69,8 @@ const saveMessage = async (data) => {
     // Buscamos el chat y si no existe lo creamos
     let chat = await getOrCreateChat(sender, receiver);
     // agregamos el mensaje al chat
-    const newMessage = await Message.create(message);
+    const newMessage = await Message.create(data);
+    console.log("newMessage", newMessage);
     await chat.addMessage(newMessage);
     return chat;
 }
@@ -104,6 +106,7 @@ const getAllChats = async (req, res, next) => {
 
 // Mostrar chats de un usuario
 const getChatsByUserId = async (userId) => {
+    if (!userId) return {msg: "No user"}
     const chats = await Chat.findAll({
         where: {
             chat_userIds: {
@@ -112,12 +115,12 @@ const getChatsByUserId = async (userId) => {
         },
         include: User
     })
-    console.log("userChats", chats);
     return chats;
 }
 
 // Eliminar chat
 const deleteChat = async (user1, user2) => {
+    if (!user1 || !user2) return {msg: "No users"}
     const chat = await Chat.findOne({
         where: {
             chat_userIds: {

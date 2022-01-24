@@ -8,6 +8,7 @@ const subscribe = async (req, res, next) => {
 
 const pushNotification = async (req, res, next) => {
     const {title, message} = req.body;
+    if (!message) return res.status(400).json({msg: "No message"});
 
     const payload = JSON.stringify({
         title,
