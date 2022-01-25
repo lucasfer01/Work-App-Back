@@ -1,5 +1,6 @@
 // Models
 const { Job } = require('../database/db');
+const { User } = require('../database/db')
 
 // Oficios
 const oficios = [
@@ -375,6 +376,47 @@ const oficios = [
     }
 ]
 
+const admins = [
+    {
+        "usr_id": "Yb3Tut9GEvQbFlsMQ6c4vAcgnpT2",
+        "usr_username": "Lucas Fernández",
+        "usr_email": "lucasfer9912@gmail.com",
+        "usr_role": "admin",
+        "usr_description": "Admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/lucasfernandez-dev/",
+            "github": "https://github.com/lucasfer01",
+            "instagram": "",
+            "facebook": "",
+        },
+        "usr_phone": "",
+        "usr_country": "Argentina",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin",
+    },
+    {
+        "usr_id": "FXmGde37EicY865PdpQ29mYasnw1",
+        "usr_username": "Lucas Ibrahim",
+        "usr_email": "lucasibrahim28@gmail.com",
+        "usr_photo": ["https://res.cloudinary.com/henrypf/image/upload/v1643076973/workApp/klg5nisxvew0asyhloug.jpg"],
+        "usr_role": "admin",
+        "usr_description": "Full Stack Developer formado en Henry, admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/lucas-ibrahim/",
+            "github": "https://github.com/Librahim99",
+            "instagram": "https://www.instagram.com/lucasibrahim_eu/",
+            "facebook": "",
+        },
+        "usr_phone": "+54 11 68927091",
+        "usr_country": "Argentina",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin",
+        "usr_banner": ["https://res.cloudinary.com/henrypf/image/upload/v1643077253/workApp/vtg87qp2rp02adjhxeks.jpg"]
+    }
+]
+
+
+
 // Cargar oficio a la base de datos
 const cargarOficios = () => {
     // Corroboramos que no hay registros
@@ -393,6 +435,25 @@ const cargarOficios = () => {
         .catch(error => console.log(error));
 }
 
+const cargarUsers = () => {
+    // Corroboramos que no hay registros
+    User.findAll()
+        .then(users => {
+            console.log(users)
+            if (!users.length) {
+                // Mapeamos y agregamos creamos el registro
+                const promisesUsers = admins.map(user => User.create({ ...user }));
+                // resolvemos la promesas
+                Promise.all(promisesUsers)
+                    .then(response => console.log('Usuarios cargados correctamente'))
+            } else {
+                console.log('La base de datos ya tiene usuarios cargados');
+            }
+        })
+        .catch(error => console.log(error));
+}
+
 module.exports = {
-    cargarOficios
+    cargarOficios,
+    cargarUsers
 }
