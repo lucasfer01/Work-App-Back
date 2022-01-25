@@ -1,5 +1,5 @@
 // Job model
-const { Job, User } = require('../database/db');
+const { Job, User, Post } = require('../database/db');
 
 // Create job
 const createJob = (req, res, next) => {
@@ -49,6 +49,15 @@ const showJobs = (req, res,next) => {
             where: {
                 usr_isActive: true
             }
+        },{
+            required: false,
+            model: Post,
+            through: {
+                attributes: []
+            },
+            where: {
+                post_isActive: true
+            }
         }]
     })
         .then(response => {
@@ -79,6 +88,15 @@ const showJobById = (req,res,next) => {
             },
             where: {
                 usr_isActive: true
+            }
+        },{
+            required: false,
+            model: Post,
+            through: {
+                attributes: []
+            },
+            where: {
+                post_isActive: true
             }
         }]
     })
