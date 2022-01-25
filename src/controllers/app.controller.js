@@ -430,7 +430,24 @@ const admins = [
         "usr_gender": "Hombre",
         "usr_charge": "Admin",
         "usr_banner": ["https://res.cloudinary.com/henrypf/image/upload/v1643077253/workApp/vtg87qp2rp02adjhxeks.jpg"]
-    }
+    },
+    {
+        "usr_id": "sltrJDFYJlYYlHKYoN5lMbZQW342",
+        "usr_username": "Mauricio giana",
+        "usr_email": "jmauricio@hotmail.com.ar",
+        "usr_role": "admin",
+        "usr_description": "Full Stack Developer formado en Henry, admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/mauricio-giana-dev",
+            "github": "https://github.com/MauricioGiana",
+            "instagram": "",
+            "facebook": "",
+        },
+        "usr_phone": "",
+        "usr_country": "Argentina",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin",
+    },
 ]
 
 
@@ -457,7 +474,6 @@ const cargarUsers = () => {
     // Corroboramos que no hay registros
     User.findAll()
         .then(users => {
-            console.log(users)
             if (!users.length) {
                 // Mapeamos y agregamos creamos el registro
                 const promisesUsers = admins.map(user => User.create({ ...user }));
