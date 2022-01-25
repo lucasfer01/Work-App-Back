@@ -10,6 +10,7 @@ module.exports = {
     MP_PUBLIC_KEY: process.env.MP_PUBLIC_KEY,
     MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN,
     MP_SUCCESS_URL: process.env.MP_SUCCESS_URL,
-    MP_FAILURE_URL: process.env.MP_FAILURE_URL
+    MP_FAILURE_URL: process.env.MP_FAILURE_URL,
+    URL_FRONT: process.env.URL_FRONT,
 }
 
