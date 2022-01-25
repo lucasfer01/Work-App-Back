@@ -395,6 +395,24 @@ const admins = [
         "usr_charge": "Admin",
     },
     {
+        "usr_id": "duUZ1DfDNfdLh5CH0kOx2CJWh702",
+        "usr_username": "andres felipe cuervo vega",
+        "usr_email": "felipecuervo12@gmail.com",
+        "usr_photo": ["https://res.cloudinary.com/henrypf/image/upload/v1643123252/workApp/viboyg1oqcjxf7y7rrav.jpg"],
+        "usr_role": "admin",
+        "usr_description": "Admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/andresfcuervo/",
+            "github": "https://github.com/acuervov/",
+            "instagram": "https://www.instagram.com/mrcrow_00/",
+            "facebook": ""
+        },
+        "usr_phone": "",
+        "usr_country": "Colombia",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin"
+    },
+    {
         "usr_id": "FXmGde37EicY865PdpQ29mYasnw1",
         "usr_username": "Lucas Ibrahim",
         "usr_email": "lucasibrahim28@gmail.com",
