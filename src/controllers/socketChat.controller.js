@@ -70,7 +70,6 @@ const saveMessage = async (data) => {
     let chat = await getOrCreateChat(sender, receiver);
     // agregamos el mensaje al chat
     const newMessage = await Message.create(data);
-    console.log("newMessage", newMessage);
     await chat.addMessage(newMessage);
     return chat;
 }
