@@ -112,7 +112,7 @@ const server = app.listen(config.PORT, () => {
 const socketIO = require('socket.io');
 const io = socketIO(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://localhost:3001", "https://workapp-back-end2.herokuapp.com", "https://work-app-front.vercel.app/"],
+        origin: ["http://localhost:3000", "http://localhost:3001", "https://work-app-henry.herokuapp.com", "https://work-app-front.vercel.app"],
     }
 });
 
@@ -213,7 +213,6 @@ io.on('connection', (socket) => {
     })
     //Escuchando un nuevo mensaje enviado por el cliente
     socket.on("message", async (data) => {
-        console.log("mensaje", data);
         // Guardamos el mensaje en el chat
         await saveMessage(data);
         //Enviando el mensaje al receptor
@@ -239,7 +238,6 @@ io.on('connection', (socket) => {
     });
     socket.on("chat-data", async (userId) => {
         const userChats = await getChatsByUserId(userId);
-        console.log("userChats", userChats);
         io.to(socket.id).emit("chat-data", userChats);
     });
     //Escuchando un usuario que se desconecta
