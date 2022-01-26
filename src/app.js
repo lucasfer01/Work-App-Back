@@ -1,6 +1,8 @@
 // Express
 const express = require('express');
 const app = express();
+// Url del front
+const URL_FRONT = process.env.URL_FRONT;
 // http server
 const { createServer } = require('http');
 const httpServer = createServer(app);
@@ -113,7 +115,7 @@ const server = app.listen(config.PORT, () => {
 const socketIO = require('socket.io');
 const io = socketIO(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://localhost:3001", "https://work-app-henry.herokuapp.com", "https://work-app-front.vercel.app"],
+        origin: ["http://localhost:3000", "http://localhost:3001", URL_FRONT],
     }
 });
 
