@@ -98,7 +98,7 @@ const server = app.listen(config.PORT, () => {
     console.log(`Escuchando http://localhost:${config.PORT}`);
 
     // Conexion a la base de datos
-    sequelize.sync({ force: true })
+    sequelize.sync({ force: false })
         .then(() => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
@@ -121,6 +121,8 @@ const io = socketIO(server, {
 let onlineUsers = {};
 // Almacenar mensajes antes de guardarlos en DB
 let messages = {};
+let unreadMessages = {};
+let unreadNotifications = {};
 
 // Aladir socket de usuario
 const addUser = (userId, socketId) => {
@@ -184,7 +186,36 @@ const deleteChatsTemp = (socketId) => {
     return { msg: "Chats temporales eliminados" };
 }
 
+// Agregar ids de usuarios que tienen mensajes sin leer
+const addUnreadMessages = (data) => {
+    const { sender, receiver } = data;
+    if (!unreadMessages[sender]) {
+        unreadMessages[receiver] = [sender];
+    } else {
+        unreadMessages[receiver].push(sender);
+    }
+}
 
+const removeUnreadMessages = (myId, senderId) => {
+    if (unreadMessages[myId]) {
+        unreadMessages[myId] = unreadMessages[myId].filter(id => id !== senderId);
+    }
+}
+
+const addUnreadNotifications = (myId, data) => {
+    const {post} = data;
+    if (!unreadNotifications[myId]) {
+        unreadNotifications[myId] = [data];
+    }   else {
+        unreadNotifications[myId].push(data);
+    }
+}
+
+const removeUnreadNotifications = (myId, postId) => {
+    if (unreadNotifications[myId]) {
+        unreadNotifications[myId] = unreadNotifications[myId].filter(post => post.post_id !== postId);
+    }
+}
 
 
 
@@ -195,7 +226,26 @@ io.on('connection', (socket) => {
     //Guardamos el socket en el objeto de usuarios conectados
     socket.on("register", async (userId) => {
         addUser(userId, socket.id);
+        // Avisar si hay nuevos mensajes
+        if (unreadMessages[userId] && unreadMessages[userId].length > 0) {
+            io.to(socket.id).emit("unread-messages", unreadMessages[userId]);
+            console.log("unread-messages", unreadMessages[userId]);
+        }
+        // Avisar si hay nuevas notificaciones
+        if (unreadNotifications[userId] && unreadNotifications[userId].length > 0) {
+            io.to(socket.id).emit("unread-notifications", unreadNotifications[userId]);
+        }
     });
+    // Mensajes leidos
+    socket.on("read-messages", (data) => {
+        const { myId, senderId } = data;
+        removeUnreadMessages(myId, senderId);
+    })
+    // Notificaciones leidas
+    socket.on("read-notifications", (data) => {
+        const { myId, postId } = data;
+        removeUnreadNotifications(myId, postId);
+    })
     // Enviar chats del usuario
     socket.on("data", async (data) => {
         const chats = await getChatsByUserId(data);
@@ -216,11 +266,9 @@ io.on('connection', (socket) => {
         //Enviando el mensaje al receptor
         if (onlineUsers[data.receiver]) {
             io.to(onlineUsers[data.receiver]).emit("response", data);
-            //Enviando notificación al receptor
-            io.to(onlineUsers[data.receiver]).emit("notification", {
-                type: "message",
-                body: data,
-            });
+        } else {
+            // Si no esta conectado agregamos a mensajes no leidos
+            addUnreadMessages(data);
         }
     });
     // Escuchando un chat id y devolviendo el historial de mensajes
@@ -233,13 +281,24 @@ io.on('connection', (socket) => {
         // Enviamos notificación a los usuarios del rubro
         const usersIds = await getUsersIdsByJobNames(data);
         usersIds.forEach(userId => {
-            io.to(onlineUsers[userId]).emit("new-post", data);
+            if (onlineUsers[userId]) {
+                io.to(onlineUsers[userId]).emit("new-post", data);
+            }   else {
+                addUnreadNotifications(userId, data);
+            }
         });
+    });
+    // Desconectar
+    socket.on("unregister", (userId) => {
+        // Eliminamos de onlineUsers
+        delete onlineUsers[userId];
+        console.log("unregister", userId);
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {
         //Eliminamos el usuario de onlineUsers
         removeUser(socket.id);
+        console.log('user disconnected');
     });
 })
 
