@@ -85,6 +85,29 @@ const showWorkerPostById = (req, res, next) => {
         .catch(error => next(error))
 }
 
+// Mostrar todos los workerPost
+const showAllWorkerpost = (req,res,next) => {
+    // Buscamos todos los workerpost
+    WorkerPost.findAll({
+        where: {
+            wp_isActive: true
+        },
+        include: [{
+            required: false,
+            model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
+            where: {
+                job_isActive: true
+            }
+        }]
+    })
+}
+
 // Actualizar WorkerPost
 const updateWorkerPost = (req, res, next) => {
     // WorkerPostId por params

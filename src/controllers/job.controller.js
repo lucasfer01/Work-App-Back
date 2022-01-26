@@ -1,5 +1,5 @@
 // Job model
-const { Job, User, Post } = require('../database/db');
+const { Job, User, Post, WorkerPost } = require('../database/db');
 
 // Create job
 const createJob = (req, res, next) => {
@@ -97,6 +97,15 @@ const showJobById = (req,res,next) => {
             },
             where: {
                 post_isActive: true
+            }
+        },{
+            required: false,
+            model: WorkerPost,
+            through: {
+                attributes: []
+            },
+            where: {
+                wp_isActive: true
             }
         }]
     })
