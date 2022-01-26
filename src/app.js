@@ -37,6 +37,7 @@ const {
     deleteChat,
 } = require('./controllers/socketChat.controller.js');
 const socketChatRoutes = require('./routes/socketChat.routes');
+const {getUsersIdsByJobNames} = require('./controllers/user.controller.js');
 
 
 // Controllers
@@ -198,17 +199,14 @@ io.on('connection', (socket) => {
     // Enviar chats del usuario
     socket.on("data", async (data) => {
         const chats = await getChatsByUserId(data);
-        console.log("thechats", chats)
         io.to(socket.id).emit("data", chats)
     })
     //Obtenemos los mensajes del chat si existen
     socket.on("chat-history", async (data) => {
         let chatHistory;
-        console.log("losdatos", data);
         if (data.chatId) chatHistory = await getChatById(data.chatId);
         else if (data.senderId && data.receiverId) chatHistory = await getChatByUsers(data.senderId, data.receiverId);
         chatHistory = chatHistory ? chatHistory.messages : [];
-        console.log("loquesemanda", chatHistory);
         io.to(socket.id).emit('chat-history', chatHistory);
     })
     //Escuchando un nuevo mensaje enviado por el cliente
@@ -225,20 +223,18 @@ io.on('connection', (socket) => {
             });
         }
     });
-    socket.on("save-chat", (data) => {
-        //Obtenemos los chats temporales del usuario que se desconecta
-        const chatsTemp = getChatsTemp(socket.id);
-        console.log("chatstemp", chatsTemp);
-        //Guardamos los chats temporales en la base de datos
-        chatsTemp.forEach(async chat => {
-            await saveMessages(chat);
-        });
-        //Eliminamos los chats temporales del usuario que se desconecta
-        deleteChatsTemp(socket.id);
-    });
+    // Escuchando un chat id y devolviendo el historial de mensajes
     socket.on("chat-data", async (userId) => {
         const userChats = await getChatsByUserId(userId);
         io.to(socket.id).emit("chat-data", userChats);
+    });
+    // Escuchando un nuevo posteo de trabajo
+    socket.on("new-post", async (data) => {
+        // Enviamos notificación a los usuarios del rubro
+        const usersIds = await getUsersIdsByJobNames(data);
+        usersIds.forEach(userId => {
+            io.to(onlineUsers[userId]).emit("new-post", data);
+        });
     });
     //Escuchando un usuario que se desconecta
     socket.on('disconnect', () => {

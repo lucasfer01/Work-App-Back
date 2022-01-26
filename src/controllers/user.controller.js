@@ -2,6 +2,8 @@
 const { User } = require('../database/db');
 // Post model
 const { Post, Job, WorkerPost, Pagos, Chat, Message } = require('../database/db');
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
 
 
 // Crear usuario
@@ -183,10 +185,31 @@ const deleteUser = (req, res, next) => {
         .catch(error => next(error));
 }
 
+// Encontrar usuarios por sus oficios
+const getUsersIdsByJobNames = async (data) => {
+    const { post, jobs} = data;
+
+    if (!post || !jobs) return [];
+    const jobsDb = await Job.findAll({
+        where: {
+            job_name: {
+                [Op.in]: jobs
+            }
+        },
+        include: [{
+            model: User,
+        }]
+    });
+    const jobsUsers = jobsDb.map(job => job.users)
+    const usersIds = jobsUsers.flat().map(user => user.usr_id);
+    return usersIds;
+}
+
 module.exports = {
     createUser,
     showUsers,
     showUserById,
+    getUsersIdsByJobNames,
     modifyUser,
     deleteUser
 }
