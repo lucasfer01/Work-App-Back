@@ -393,6 +393,10 @@ const admins = [
         "usr_country": "Argentina",
         "usr_gender": "Hombre",
         "usr_charge": "Admin",
+        "usr_location":{
+            "lat":-34.6161152,
+            "lng":-58.4056832
+        }
     },
     {
         "usr_id": "duUZ1DfDNfdLh5CH0kOx2CJWh702",
@@ -429,7 +433,11 @@ const admins = [
         "usr_country": "Argentina",
         "usr_gender": "Hombre",
         "usr_charge": "Admin",
-        "usr_banner": ["https://res.cloudinary.com/henrypf/image/upload/v1643077253/workApp/vtg87qp2rp02adjhxeks.jpg"]
+        "usr_banner": ["https://res.cloudinary.com/henrypf/image/upload/v1643077253/workApp/vtg87qp2rp02adjhxeks.jpg"],
+        "usr_location":{
+            "lat":-34.5151052,
+            "lng":-58.7662461
+        }
     },
     {
         "usr_id": "sltrJDFYJlYYlHKYoN5lMbZQW342",
@@ -448,6 +456,32 @@ const admins = [
         "usr_gender": "Hombre",
         "usr_charge": "Admin",
     },
+    { 
+        "usr_id":"r7gkgq3jjvWVCS5fNbbpAQ4D3wM2",
+        "usr_username":"Nahuel Cernadas",
+        "usr_email":"gabrielnahuel96@gmail.com",
+        "usr_photo":["https://res.cloudinary.com/henrypf/image/upload/v1643222759/workApp/l2qfkvxswdaq83lzfwzn.jpg"],
+        "usr_role":"admin",
+        "usr_description":"Soy full stack developer",
+        "usr_social":{
+            "linkedin":"https://www.linkedin.com/in/nahuel-cernadas-3b111a1b7/",
+            "github":"https://github.com/Nahuel-199"
+        },
+        "usr_phone":"1123359620",
+        "usr_country":"Argentina",
+        "usr_gender":"Hombre",
+        "usr_charge":"Frontend estilos",
+        "usr_banner":["https://res.cloudinary.com/henrypf/image/upload/v1643222772/workApp/acyjqzirimjr3irb5myz.jpg"]
+    }
+    // {
+    //     Martin
+    // },
+    // {
+    //     Enrique
+    // },
+    // {
+    //     Jehison
+    // }
 ]
 
 
