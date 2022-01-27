@@ -13,7 +13,6 @@ const enviarMail = async (req, res) => {
 
   if (!post || !jobs) return res.status(400).send("No hay alertas de empleo");
 
-  console.log("post", post);
 
   const users = await User.findAll({
     where: {
