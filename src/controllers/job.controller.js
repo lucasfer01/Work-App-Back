@@ -1,10 +1,11 @@
 // Job model
-const { Job, User } = require('../database/db');
+const { Job, User, Post, WorkerPost } = require('../database/db');
 
 // Create job
 const createJob = (req, res, next) => {
     // Cuerpo de la solicitud
     const dataJob = req.body;
+    if (!dataJob) return res.status(400).json({msg: "No job data"});
 
     // Buscamos el oficio
     Job.findOne({
@@ -42,8 +43,20 @@ const showJobs = (req, res,next) => {
         include: [{
             required: false,
             model: User,
+            through: {
+                attributes: []
+            },
             where: {
                 usr_isActive: true
+            }
+        },{
+            required: false,
+            model: Post,
+            through: {
+                attributes: []
+            },
+            where: {
+                post_isActive: true
             }
         }]
     })
@@ -60,6 +73,7 @@ const showJobs = (req, res,next) => {
 const showJobById = (req,res,next) => {
     // jobId por url
     const { jobId } = req.params;
+    if (!jobId) return res.status(400).json({msg: "No job id"});
 
     // Buscamos el trabajo
     Job.findOne({
@@ -69,8 +83,29 @@ const showJobById = (req,res,next) => {
         include: [{
             required: false,
             model: User,
+            through: {
+                attributes: []
+            },
             where: {
                 usr_isActive: true
+            }
+        },{
+            required: false,
+            model: Post,
+            through: {
+                attributes: []
+            },
+            where: {
+                post_isActive: true
+            }
+        },{
+            required: false,
+            model: WorkerPost,
+            through: {
+                attributes: []
+            },
+            where: {
+                wp_isActive: true
             }
         }]
     })
@@ -82,6 +117,7 @@ const showJobById = (req,res,next) => {
 const showJobByName = (req,res,next) => {
     // jobName por query
     const { jobName } = req.query;
+    if (!jobName) return res.status(400).json({msg: "No job name"});
 
     // Buscamos el oficio por nombre
     Job.findOne({
@@ -106,6 +142,7 @@ const modifyJob = (req,res,next) => {
     const { jobId } = req.params;
     // Data a actualizar
     const dataJob = req.body;
+    if (!jobId || !dataJob) return res.status(400).json({msg: "No job id or data"});
 
     // Buscamos el trabajo
     Job.findByPk(jobId)
@@ -120,6 +157,7 @@ const modifyJob = (req,res,next) => {
 const deleteJob = (req,res,next) => {
     // jobId por url
     const { jobId } = req.params;
+    if (!jobId) return res.status(400).json({msg: "No job id"});
 
     // Buscamos el trabajo por id
     Job.findByPk(jobId)

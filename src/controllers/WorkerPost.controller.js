@@ -21,6 +21,7 @@ const createWorkerPost = (req, res, next) => {
 const showUserWorkerPost = (req, res, next) => {
     // Recibimos el id del usuario por params
     const { userId } = req.params;
+    if (!userId) return res.status(400).json({ msg: "No user id" });
 
     // Mostrar los post de un usuario
     WorkerPost.findAll({
@@ -28,9 +29,18 @@ const showUserWorkerPost = (req, res, next) => {
             usr_id: userId,
             wp_isActive: true
         },
+        attributes: {
+            exclude: ['userUsrId']
+        },
         include: [{
             required: false,
             model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
             where: {
                 job_isActive: true
             }
@@ -47,15 +57,25 @@ const showUserWorkerPost = (req, res, next) => {
 const showWorkerPostById = (req, res, next) => {
     // WorkerPostId por params
     const { workerPostId } = req.params;
+    if (!workerPostId) return res.status(400).json({ msg: "No worker post id" });
 
     // Buscamos el workerpost
     WorkerPost.findOne({
         where: {
             wp_id: workerPostId
         },
+        attributes: {
+            exclude: ['userUsrId']
+        },
         include: [{
             required: false,
             model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
             where: {
                 job_isActive: true
             }
@@ -65,12 +85,36 @@ const showWorkerPostById = (req, res, next) => {
         .catch(error => next(error))
 }
 
+// Mostrar todos los workerPost
+const showAllWorkerpost = (req,res,next) => {
+    // Buscamos todos los workerpost
+    WorkerPost.findAll({
+        where: {
+            wp_isActive: true
+        },
+        include: [{
+            required: false,
+            model: Job,
+            attributes: {
+                exclude: ['updatedAt','createdAt']
+            },
+            through: {
+                attributes: []
+            },
+            where: {
+                job_isActive: true
+            }
+        }]
+    })
+}
+
 // Actualizar WorkerPost
 const updateWorkerPost = (req, res, next) => {
     // WorkerPostId por params
     const { workerPostId } = req.params;
     // Data de workerPost por body
     const dataWorkerPost = req.body;
+    if (!workerPostId) return res.status(400).json({ msg: "No worker post id" });
 
     // Buscamos el post
     WorkerPost.findByPk(workerPostId)
@@ -88,6 +132,7 @@ const updateWorkerPost = (req, res, next) => {
 const deleteWorkerPost = (req, res, next) => {
     // WorkerPostId por params
     const { workerPostId } = req.params;
+    if (!workerPostId) return res.status(400).json({ msg: "No worker post id" });
 
     // Busacamos el workerPost
     WorkerPost.findByPk(workerPostId)

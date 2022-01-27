@@ -2,6 +2,7 @@
 const { Router } = require('express');
 // User Controller
 const { createUser, showUsers, showUserById, modifyUser, deleteUser } = require('../controllers/user.controller');
+const { actualizarPlan } = require('../controllers/planes.controller');
 
 // Usamos router
 const userRoutes = Router();
@@ -16,6 +17,8 @@ userRoutes.post('/', createUser); // Creamos un usuario
 userRoutes.put('/:userId', modifyUser); // Actualizamos un usuario
 
 userRoutes.delete('/:userId', deleteUser); // Eliminamos un usuario
+
+userRoutes.put('/update-plan/:userId', actualizarPlan); // Cambiar el plan del usuario
 
 
 // Exportamos rutas

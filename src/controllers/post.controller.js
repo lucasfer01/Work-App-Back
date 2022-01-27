@@ -1,19 +1,25 @@
 // Post model
-const { Post, Job } = require('../database/db');
+const { Post, Job, User } = require('../database/db');
+const user = require('../models/user');
 
 // Crea un post
-const createPost = (req, res, next) => {
+const createPost = async (req, res, next) => {
     // Body Request
-    const dataPost = req.body;
+    const { post, jobs } = req.body;
+
+    const jobsDb = await Job.findAll({
+        where: {
+            job_name: jobs
+        }
+    });
 
     // Creamos el post
-    Post.create({
-        ...dataPost
+    const newPost = await Post.create({
+        ...post
     })
-        .then(post => {
-            return res.status(200).json(post);
-        })
-        .catch(error => next(error));
+    await newPost.addJobs(jobsDb);
+    // Retornamos el post creado
+    res.json(newPost);
 }
 
 // Mostrar todos los post
@@ -22,7 +28,28 @@ const showPosts = (req, res, next) => {
     Post.findAll({
         where: {
             post_isActive: true
-        }
+        },
+        attributes: {
+            exclude: ['userUsrId'],
+        },
+        include: [
+            {
+                required: false,
+                model: Job,
+                attributes: {
+                    exclude: ['updatedAt', 'createdAt']
+                },
+                through: {
+                    attributes: []
+                },
+                where: {
+                    job_isActive: true
+                }
+            },
+            {
+                model: User,
+            }
+        ]
     })
         .then(posts => res.json(posts)) // Retornamos todos los post encontrados
         .catch(error => next(error));
@@ -32,15 +59,25 @@ const showPosts = (req, res, next) => {
 const showPostById = (req, res, next) => {
     // Id de req.params
     const { postId } = req.params;
+    if (!postId) return res.status(400).json({ msg: "No post id" });
 
     // Buscamos el post
     Post.findOne({
         where: {
             post_id: postId
         },
+        attributes: {
+            exclude: ['userUsrId']
+        },
         include: [{
             required: false,
             model: Job,
+            attributes: {
+                exclude: ['updatedAt', 'createdAt']
+            },
+            through: {
+                attributes: []
+            },
             where: {
                 job_isActive: true
             }

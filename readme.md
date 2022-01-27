@@ -1,259 +1,63 @@
-# Work App Backend
+# WorkApp
 
-## Pasos a seguir
+Single Page Aplication que busca facilitar la búsqueda de trabajadores y el contacto entre trabajador y cliente. Un usuario puede buscar perfiles por el tipo de trabajo que requiere y pueden conversar los detalles de la contratación por el chat dentro de la app. Además los usuario que quieren ser contratados pueden subir lo que llamamos un "Workerpost", donde va a poder mostrar los detalles de su trabajo y asi aumentar la probabilidad de ser contratado. Además, si asi lo quisiese, el usuario puede contratar lo que llamamos "WorkApp Premium". Este plan le permite al usuario aumentar la visibilidad de su perfil y asi tambien aumentar la probabilidad de ser contratado.
 
-Clonar el repositorio
+- [Repositorio Frontend](https://github.com/lucasfer01/Work-App-Front)
 
-```bash
-  git clone https://github.com/lucasfer01/Work-App-Back.git
-```
+## Caracteristicas
 
-Instalar dependencias
+La información mostrada en la app proviene del backend que desarrollamos con `Node Js` y `Express` para levantar el servidor, y `PostgreSQL` junto con el ORM `Sequelize` para almacenar la información. En el backend desarrollamos todos los endpoints necesarios para realizar el CRUD de los registros y las relaciones entre ellos como también algunos filtro de registros a partir del nombre del empleo. Por ultimo, alli también se aloja la lógica de los chats y la pasarela de pago.
 
-```bash
-  Dentro del repositorio abrir consola y escribir "npm install"
-```
+En cuanto al frontend utilizamos `React`, para el armado del `HTML`, `Redux` para los estados globales de la aplicación y `CSS` y `Material Ui` para los Estilos. </br>
+En principio, en cuanto a la autenticación, utilizamos `Firebase`. Todas las rutas estan protegidas y solo se podran acceder si el usuario esta logeado. </br>
+En cuanto a filtros la aplicación cuenta con un filtrado por ubicación, gracias a la api de `google maps`, por tipo de empleo, utilizando los endpoints del backend, y por tipo de urgencia. </br>
+En cuanto a los post y workerpost se pueden editar y eliminar a gusto del usuario. </br>
+Por ultimo tenemos los chat y las notificaciones donde incorporamos `Socket.io` para que esté a la escucha constantemente.
 
-Crear archivo `.env` y crear las variables de entorno
+## Fotos
 
-```bash
-  PORT=3000
-  POSTGRES_HOST=localhost
-  POSTGRES_USER=postgres
-  POSTGRES_PASSWORD= aca va tu contraseña
-  POSTGRES_DB_NAME=work_app
+### Landing
 
-  MP_PUBLIC_KEY='TEST-c89f6107-933c-448b-85a0-8d16c06d11bf'
-  MP_ACCESS_TOKEN='TEST-6732755547074714-011214-d9dded86854d62687fb0b0a53f66a40e-272180329'
-  MP_SUCCESS_URL='http://localhost:3001/home'
-  MP_FAILURE_URL='http://localhost:3001/home'
+<img src='./readme/landing.jpeg' />
 
-  PUBLIC_VAPID_KEY=BIGOGlUA89Jmop6cxKKXBw26LSl679plMCPJ6oDykA5Ik6KlM90sBZcxy80tkPq5HIYd-55vc-M-3Xs1my8SgX4
-  PRIVATE_VAPID_KEY=cAIh586rrv7DJm7IMefhlkUMoU4WhZQKW5yUzcUllrg
-```
+### Home
 
-Levantar el servidor
+<img src='./readme/home.jpeg' />
 
-```bash
-  En la misma consola escribir "npm start"
-```
+### Buscar trabajo
 
-</br>
+<img src='./readme/buscar-trabajo.jpeg' />
 
-## Endpoints
+### Perfiles del oficio que busco
 
-### Usuarios
-````
-RUTA: http://localhost:3000/user
+<img src='./readme/perfiles-oficio.jpeg' />
 
-SUBRUTAS:
-  Get:
-    '/' (Mostrar todo los usuarios)
+### Mi perfil
 
-    '/:userId' (Buscar usuario por id y mostrarlo)
+<img src='./readme/mi-perfil.jpeg' />
 
-  Post:
-    '/' (Crear usuario)
+### Perfil de otro usuario
 
-  Put:
-    '/:userId' (Modificar usuario)
+<img src='./readme/otro-usuario.jpeg' />
 
-  Delete:
-    '/:userId' (Eliminar usuario) 
+### Chat
 
+<img src='./readme/chat.jpeg' />
 
-  JSON:
-    {
-      "usr_username": "Lucasfer01",
-      "usr_email": "mail@gmail.com",
-      "usr_id": "a2",
-      "usr_photo": ["Link 1", "Link 2", "Link 3"],
-      "usr_role": "user",
-      "usr_description": "Descripcion del perfil",
-      "usr_location": {latitud, longitud},
-      "usr_score": 5
-    }
-````
+### Detalles de post
 
-RESPUESTA: 
+<img src='./readme/detalles-post.jpeg' />
 
-  <br/>
+## Integrantes
 
-  <img src='./media/readme/user/user-json-response1.jpeg' height='300px'/>
+- [Lucas Fernández](https://github.com/lucasfer01)
 
-  <br/>
+- [Mauricio Giana](https://github.com/MauricioGiana)
 
-  <img src='./media/readme/user/user-json-response2.jpeg' height='300px'/>
+- [Andrés Felipe Cuervo](https://github.com/acuervov)
 
-### Oficios
+- [Lucas Ibrahim](https://github.com/Librahim99)
 
-````
-RUTA: http://localhost:3000/job
+- [Jehison Gutierrez](https://github.com/jehison98)
 
-SUBRUTAS:
-  Get:
-    '/' (Mostrar todos los oficios)
-
-    '/:jobId' (Buscar oficio por id y mostrarlo)
-
-    '/job?jobName=NombreDelOficio'
-
-  Post:
-    '/' (Crear oficio)
-
-  Put:
-    '/:jobId' (Actualizar oficio)
-
-  Delete:
-    '/:jobId' (Eliminar oficio)
-
-
-  JSON:
-    {
-      "job_name": "fullstack developer",
-      "job_description": "Descripcion de fullstack developer"
-    }
-````
-
-RESPUESTA:
-
-<img src='./media/readme/job/job-json-response.jpeg'/>
-
-### Conectar oficio con usuario
-
-````
-RUTA: http://localhost:3000/user-job
-
-SUBRUTAS:
-  Post:
-    '/:userId/:jobId' (Conecta el usuario del id con el trabajo del id)
-````
-
-### Posteos
-
-````
-RUTA: http://localhost:3000/post
-
-SUBRUTAS:
-  Get:
-    '/' (Mostrar todos los oficios)
-
-    '/:postId' (Buscar post por id y mostrarlo)
-
-  Post:
-    '/' (Crear post)
-
-  Put:
-    '/:postId' (Actualizar el post)
-
-  Delete:
-    '/:postId' (Eliminar post)
-
-
-  JSON:
-    {
-      "post_title": "FullStack Developer",
-      "post_description": "Frontend and Backend Developer",
-      "post_shortdescription": "Descripcion corta",
-      "post_photo": ["Link 1", "Link 2"],
-      "post_priority": "Urgente",
-      "post_fee": 140,
-      "usr_id": "id de usuario que hace el post"
-    }
-````
-
-RESPUESTA:
-<img src='./media/readme/post/post-json-response.jpeg'/>
-
-### Relacion post con oficio
-
-````
-RUTA: 'http://localhost:3000'
-
-SUBRUTAS:
-  POST:
-    '/:workerPostId/:jobId' (Relacionar post con oficio)
-````
-
-### Mercadopago
-
-````
-POST: http://localhost:3000/checkout
-
-ENVIAR -->   JSON: {
-                    "title": "Dummy Title",   <-- OBLIGATORIO
-                    "description": "Dummy description",    <-- OBLIGATORIO
-                    "picture_url": "http://www.myapp.com/myimage.jpg",
-                    "category_id": "cat123",
-                    "quantity": 1,    <-- OBLIGATORIO
-                    "unit_price": 10    <-- OBLIGATORIO
-                  }
-
-<-- DEVUELVE
-    RESULTADO: Devuelve un objeto con informacion de la operacion, pero lo que importa es el campo "init_point", el cual es un link que lleva a la pagina para completar el pago
-
-
-Credencial de prueba
-
-Numero de tarjeta: 5031 7557 3453 0604
-
-Vencimeinto: 11/25
-
-codigo de seguridad: 123
-
-Nombre: Cualquiera (Oponer OTHE para que el pago de rechazado);
-
-los demas datos se pueden inventar, tales como dni y mail
-````
-
-
-### WorkerPost
-
-````
-RUTA: http://localhost:3000/workerPost
-
-SUBRUTAS:
-  POST: 
-    '/' (Crear workerPost)
-
-  GET: 
-    '/user/:userId' (Trae todos los workerpost del usuario)
-
-    '/:workerpostId' (Trae workerpost por id) 
-
-  PUT:
-    '/:workerpostId' (Actualizar datos de workerpost)
-
-  DELETE:
-    '/:workerpostId' ("Elimina" el workerpost)
-
-
-
-  JSON: {
-          "wp_title": "Titulo",
-          "wp_description": "Description",
-          "wp_photo": ["link1", "link2"],
-          "usr_id": "id de usuario que hizo el post"
-        }
-
-````
-
-RESPUESTA:
-  <img src='./media/readme/workerpost/workerpost-json-response.jpeg' />
-
-### Relacionar workerpost con oficio
-
-````
-RUTA: http://localhost:3000/workerpost-job/:workerpostId/:jobId
-
-````
-### Notificaciones push
-
-````
-ENVIAR NOTIFICACIÓN: 
-POST: http://localhost:3000/push-notification
-BODY: {
-  title: "Something",
-  message: "Something else",
-}
-````
+- [Nahuel Cernadas](https://github.com/Nahuel-199)

@@ -5,6 +5,7 @@ const { User, Job } = require('../database/db');
 const userJob = (req, res, next) => {
     // Cuerpo de la solicitud
     const { userId, jobId } = req.params;
+    if (!userId || !jobId) return res.status(400).json({msg: "Bad request"});
 
     User.findByPk(userId)
         .then(userFind => {
@@ -19,6 +20,7 @@ const userJob = (req, res, next) => {
 const getUserFromJob = (req, res, next) => {
     // Obtenemos el trabajo a filtrar por query
     const { jobName } = req.query;
+    if (!jobName) return res.status(400).json({msg: "No job name"});
 
     // Buscamos entre todos los usuarios
     User.findAll({

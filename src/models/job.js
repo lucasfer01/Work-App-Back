@@ -20,6 +20,9 @@ module.exports = (sequelize) => {
         job_isActive: {
             type: DataTypes.BOOLEAN,
             defaultValue: true
+        },
+        job_photo:{
+            type: DataTypes.STRING
         }
     });
 }
