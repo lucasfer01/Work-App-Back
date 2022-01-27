@@ -1,5 +1,6 @@
 // Models
 const { Job } = require('../database/db');
+const { User } = require('../database/db')
 
 // Oficios
 const oficios = [
@@ -375,6 +376,116 @@ const oficios = [
     }
 ]
 
+const admins = [
+    {
+        "usr_id": "Yb3Tut9GEvQbFlsMQ6c4vAcgnpT2",
+        "usr_username": "Lucas Fernández",
+        "usr_email": "lucasfer9912@gmail.com",
+        "usr_role": "admin",
+        "usr_description": "Admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/lucasfernandez-dev/",
+            "github": "https://github.com/lucasfer01",
+            "instagram": "",
+            "facebook": "",
+        },
+        "usr_phone": "",
+        "usr_country": "Argentina",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin",
+        "usr_location":{
+            "lat":-34.6161152,
+            "lng":-58.4056832
+        }
+    },
+    {
+        "usr_id": "duUZ1DfDNfdLh5CH0kOx2CJWh702",
+        "usr_username": "andres felipe cuervo vega",
+        "usr_email": "felipecuervo12@gmail.com",
+        "usr_photo": ["https://res.cloudinary.com/henrypf/image/upload/v1643123252/workApp/viboyg1oqcjxf7y7rrav.jpg"],
+        "usr_role": "admin",
+        "usr_description": "Admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/andresfcuervo/",
+            "github": "https://github.com/acuervov/",
+            "instagram": "https://www.instagram.com/mrcrow_00/",
+            "facebook": ""
+        },
+        "usr_phone": "",
+        "usr_country": "Colombia",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin"
+    },
+    {
+        "usr_id": "FXmGde37EicY865PdpQ29mYasnw1",
+        "usr_username": "Lucas Ibrahim",
+        "usr_email": "lucasibrahim28@gmail.com",
+        "usr_photo": ["https://res.cloudinary.com/henrypf/image/upload/v1643076973/workApp/klg5nisxvew0asyhloug.jpg"],
+        "usr_role": "admin",
+        "usr_description": "Full Stack Developer formado en Henry, admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/lucas-ibrahim/",
+            "github": "https://github.com/Librahim99",
+            "instagram": "https://www.instagram.com/lucasibrahim_eu/",
+            "facebook": "",
+        },
+        "usr_phone": "+54 11 68927091",
+        "usr_country": "Argentina",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin",
+        "usr_banner": ["https://res.cloudinary.com/henrypf/image/upload/v1643077253/workApp/vtg87qp2rp02adjhxeks.jpg"],
+        "usr_location":{
+            "lat":-34.5151052,
+            "lng":-58.7662461
+        }
+    },
+    {
+        "usr_id": "sltrJDFYJlYYlHKYoN5lMbZQW342",
+        "usr_username": "Mauricio giana",
+        "usr_email": "jmauricio@hotmail.com.ar",
+        "usr_role": "admin",
+        "usr_description": "Full Stack Developer formado en Henry, admin de WorkApp",
+        "usr_social":{
+            "linkedin": "https://www.linkedin.com/in/mauricio-giana-dev",
+            "github": "https://github.com/MauricioGiana",
+            "instagram": "",
+            "facebook": "",
+        },
+        "usr_phone": "",
+        "usr_country": "Argentina",
+        "usr_gender": "Hombre",
+        "usr_charge": "Admin",
+    },
+    { 
+        "usr_id":"r7gkgq3jjvWVCS5fNbbpAQ4D3wM2",
+        "usr_username":"Nahuel Cernadas",
+        "usr_email":"gabrielnahuel96@gmail.com",
+        "usr_photo":["https://res.cloudinary.com/henrypf/image/upload/v1643222759/workApp/l2qfkvxswdaq83lzfwzn.jpg"],
+        "usr_role":"admin",
+        "usr_description":"Soy full stack developer",
+        "usr_social":{
+            "linkedin":"https://www.linkedin.com/in/nahuel-cernadas-3b111a1b7/",
+            "github":"https://github.com/Nahuel-199"
+        },
+        "usr_phone":"1123359620",
+        "usr_country":"Argentina",
+        "usr_gender":"Hombre",
+        "usr_charge":"Frontend estilos",
+        "usr_banner":["https://res.cloudinary.com/henrypf/image/upload/v1643222772/workApp/acyjqzirimjr3irb5myz.jpg"]
+    }
+    // {
+    //     Martin
+    // },
+    // {
+    //     Enrique
+    // },
+    // {
+    //     Jehison
+    // }
+]
+
+
+
 // Cargar oficio a la base de datos
 const cargarOficios = () => {
     // Corroboramos que no hay registros
@@ -393,6 +504,24 @@ const cargarOficios = () => {
         .catch(error => console.log(error));
 }
 
+const cargarUsers = () => {
+    // Corroboramos que no hay registros
+    User.findAll()
+        .then(users => {
+            if (!users.length) {
+                // Mapeamos y agregamos creamos el registro
+                const promisesUsers = admins.map(user => User.create({ ...user }));
+                // resolvemos la promesas
+                Promise.all(promisesUsers)
+                    .then(response => console.log('Usuarios cargados correctamente'))
+            } else {
+                console.log('La base de datos ya tiene usuarios cargados');
+            }
+        })
+        .catch(error => console.log(error));
+}
+
 module.exports = {
-    cargarOficios
+    cargarOficios,
+    cargarUsers
 }
