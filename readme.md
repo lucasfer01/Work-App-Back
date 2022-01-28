@@ -42,7 +42,7 @@ Por ultimo tenemos los chat y las notificaciones donde incorporamos `Socket.io` 
 
 ### Chat
 
-<img src='./readme/chat.jpeg' />
+<img src='./readme/Chat.jpeg' />
 
 ### Detalles de post
 
