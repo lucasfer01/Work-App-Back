@@ -105,7 +105,7 @@ const server = app.listen(config.PORT, () => {
             console.log(`Conectado correctamente a DB ${config.POSTGRES_DB_NAME}`);
             // Cargamos oficios
             cargarOficios();
-            cargarUsers()
+            /* cargarUsers() */
         }).catch(error => {
             console.log(error);
         });
